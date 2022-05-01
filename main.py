@@ -10,7 +10,6 @@ pygame.init()
 clock = pygame.time.Clock()
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 bg = pygame.Surface((WIDTH, HEIGHT))
-bg.fill((255, 255, 255))
 image = pygame.image.load("assets/caze_placeholder.png").convert_alpha()
 
 pygame.font.init()
@@ -59,19 +58,11 @@ state = GameState.Menu
 if __name__ == "__main__":
     while True:
         clock.tick(FPS)
+        bg.fill((255, 255, 255))
         for event in pygame.event.get():
             if event.type == pygame.WINDOWCLOSE:
                 pygame.quit()
                 exit()
-
-            if state == GameState.Menu:
-                menu.render()
-            elif state == GameState.Playing:
-                render_game()
-            elif state == GameState.Credits:
-                # TODO
-                exit()
-
             if menu.clicked_on_start_game(event):
                 state = GameState.Playing
             elif menu.clicked_on_credits(event):
