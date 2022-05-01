@@ -2,42 +2,47 @@ import pygame
 
 
 class Caze(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.surface,
-                 image: pygame.image,
-                 initial_lane: int):
+    def __init__(self,
+                 surface: pygame.surface.Surface,
+                 image: pygame.surface.Surface):
         pygame.sprite.Sprite.__init__(self)
-        self._surface = surface
         self._image = image
-        self._lane = initial_lane
+        self._surface = surface
+        self._stamina = 100
+        self._speed = 10
+        self._lane = 1
 
-    @property
-    def surface(self):
-        return self._surface
+    def change_lane(self, direction: str):
+        if direction is 'left':
+            self.move_left()
+        else:
+            self.move_right()
+        self.update_lane()
 
-    @property
-    def lane(self):
-        return self._lane
+    def move_left(self):
+        if self._lane - 1 < 0:
+            pass
+        else:
+            self._lane -= 1
+
+    def move_right(self):
+        if self._lane + 1 > 2:
+            pass
+        else:
+            self._lane += 1
+
+    def update_lane(self):
+        print(f'updating to lane [{self._lane}]')
+        # self._surface.blit(self._image, (lanes[self._lane], self._image.get_height()))
 
     @property
     def image(self):
         return self._image
 
-    def move_right(self):
-        if self._lane + 1 >= 2:
-            self._lane = 2
-        else:
-            self._lane += 1
-
-    def move_left(self):
-        if self._lane - 1 <= 0:
-            self._lane = 0
-        else:
-            self._lane -= 1
-
     @image.setter
     def image(self, value):
         self._image = value
 
-    @surface.setter
-    def surface(self, value):
-        self._surface = value
+    @property
+    def lane(self):
+        return self._lane
