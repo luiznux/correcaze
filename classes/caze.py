@@ -2,9 +2,7 @@ import pygame
 
 
 class Caze(pygame.sprite.Sprite):
-    def __init__(self,
-                 surface: pygame.surface.Surface,
-                 image: pygame.surface.Surface):
+    def __init__(self, surface: pygame.surface.Surface, image: pygame.surface.Surface):
         pygame.sprite.Sprite.__init__(self)
         self._image = image
         self._surface = surface
@@ -13,7 +11,7 @@ class Caze(pygame.sprite.Sprite):
         self._lane = 1
 
     def change_lane(self, direction: str):
-        if direction is 'left':
+        if direction is "left":
             self.move_left()
         else:
             self.move_right()
