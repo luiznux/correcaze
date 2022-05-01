@@ -17,7 +17,6 @@ class Caze(pygame.sprite.Sprite):
             self.move_left()
         else:
             self.move_right()
-        self.update_lane()
 
     def move_left(self):
         if self._lane - 1 < 0:
@@ -30,10 +29,6 @@ class Caze(pygame.sprite.Sprite):
             pass
         else:
             self._lane += 1
-
-    def update_lane(self):
-        print(f'updating to lane [{self._lane}]')
-        # self._surface.blit(self._image, (lanes[self._lane], self._image.get_height()))
 
     @property
     def image(self):
