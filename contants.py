@@ -4,6 +4,6 @@ lanes = {
     2: 850
 }
 
-HEIGHT = 1280
-WIDTH = 720
+HEIGHT = 720
+WIDTH = 1280
 FPS = 60
