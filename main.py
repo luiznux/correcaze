@@ -34,12 +34,15 @@ def prepare_lanes(surface: pygame.surface.Surface):
 
 def render_game():
     prepare_lanes(bg)
+    bg.blit(cazezinho.image, (lanes[cazezinho.lane], cazezinho.image.get_height()))
+
+
+def move_caze():
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_LEFT:
             cazezinho.change_lane("left")
         if event.key == pygame.K_RIGHT:
             cazezinho.change_lane("right")
-    bg.blit(cazezinho.image, (lanes[cazezinho.lane], cazezinho.image.get_height()))
 
 
 menu = Menu(bg)
@@ -70,6 +73,16 @@ if __name__ == "__main__":
             elif menu.clicked_on_quit(event):
                 pygame.quit()
                 exit()
+            if event.type == pygame.KEYDOWN and state == GameState.Playing:
+                move_caze()
+
+        if state == GameState.Menu:
+            menu.render()
+        elif state == GameState.Playing:
+            render_game()
+        elif state == GameState.Credits:
+            # TODO
+            exit()
 
         window.blit(bg, (0, 0))
         pygame.display.flip()
