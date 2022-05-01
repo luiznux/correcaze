@@ -34,20 +34,39 @@ def prepare_lanes(surface):
 
 
 def render_main_menu(surface: pygame.surface.Surface):
-    title_font = pygame.font.SysFont('Monaco', 60)
-    title_surface = title_font.render('Corre Caze', False, (0, 0, 0))
+    title_font = pygame.font.SysFont("Monaco", 60)
+    title_surface = title_font.render("Corre Cazé", True, (0, 0, 0))
     # Define o X como o meio da tela
     title_position_x = (WIDTH / 2) - (title_surface.get_width() / 2)
     surface.blit(title_surface, (title_position_x, 100))
 
-    pygame.draw.rect(surface, (255, 0, 0),
-                     pygame.Rect((title_position_x, 150, title_surface.get_width(), 100)))
+    button_font = pygame.font.SysFont("Monaco", 40)
 
-    pygame.draw.rect(surface, (255, 0, 0),
-                     pygame.Rect((title_position_x, 300, title_surface.get_width(), 100)))
+    start_game_button = pygame.Rect((title_position_x, 150, title_surface.get_width(), 100))
+    pygame.draw.rect(surface, (255, 0, 0), start_game_button)
+    start_game_text = button_font.render("Iniciar Jogo", True, (0, 0, 0))
 
-    pygame.draw.rect(surface, (255, 0, 0),
-                     pygame.Rect((title_position_x, 450, title_surface.get_width(), 100)))
+    width_margin = int((start_game_button.width - start_game_text.get_width()) / 2)
+    height_margin = int((start_game_button.height - start_game_text.get_height()) / 2)
+
+    surface.blit(start_game_text, (start_game_button.x + width_margin,
+                                   start_game_button.y + height_margin))
+
+    credits_button = pygame.Rect((title_position_x, 300, title_surface.get_width(), 100))
+    pygame.draw.rect(surface, (255, 0, 0), credits_button)
+    credits_text = button_font.render("Créditos", True, (0, 0, 0))
+    width_margin = int((credits_button.width - credits_text.get_width()) / 2)
+    height_margin = int((start_game_button.height - start_game_text.get_height()) / 2)
+    surface.blit(credits_text, (credits_button.x + width_margin,
+                                credits_button.y + height_margin))
+
+    quit_button = pygame.Rect((title_position_x, 450, title_surface.get_width(), 100))
+    pygame.draw.rect(surface, (255, 0, 0), quit_button)
+    quit_text = button_font.render("Sair", True, (0, 0, 0))
+    width_margin = int((quit_button.width - quit_text.get_width()) / 2)
+    height_margin = int((start_game_button.height - start_game_text.get_height()) / 2)
+    surface.blit(quit_text, (quit_button.x + width_margin,
+                             quit_button.y + height_margin))
 
 
 # prepare_lanes(bg)
