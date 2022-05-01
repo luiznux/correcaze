@@ -34,17 +34,7 @@ class Menu:
             return False
 
         mouse_position = pygame.mouse.get_pos()
-        mouse_x = mouse_position[0]
-        mouse_y = mouse_position[1]
-        button_x_range = (button.x, button.x + button.width)
-        button_y_range = (button.y, button.y + button.height)
-
-        if (mouse_x >= button_x_range[0] and mouse_x <= button_x_range[1]) and (
-            mouse_y >= button_y_range[0] and mouse_y <= button_y_range[1]
-        ):
-            return True
-
-        return False
+        return button.collidepoint(mouse_position)
 
     def render(self):
         title_surface = self.__render_main_title()
