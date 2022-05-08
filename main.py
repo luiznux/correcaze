@@ -4,6 +4,7 @@ from enum import Enum
 
 from classes.caze import Caze
 from classes.menu import Menu
+from classes.credits import Credits
 from contants import *
 
 pygame.init()
@@ -46,6 +47,7 @@ def move_caze():
 
 
 menu = Menu(bg)
+credits = Credits(bg)
 cazezinho = Caze(bg, image)
 
 
@@ -75,14 +77,15 @@ if __name__ == "__main__":
                 exit()
             if event.type == pygame.KEYDOWN and state == GameState.Playing:
                 move_caze()
+            if credits.clicked_on_menu(event):
+                state = GameState.Menu
 
         if state == GameState.Menu:
             menu.render()
         elif state == GameState.Playing:
             render_game()
         elif state == GameState.Credits:
-            # TODO
-            exit()
+            credits.render()
 
         window.blit(bg, (0, 0))
         pygame.display.flip()

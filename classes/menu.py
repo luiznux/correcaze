@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame
 
 from contants import *
