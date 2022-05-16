@@ -64,6 +64,14 @@ if __name__ == "__main__":
     while True:
         clock.tick(FPS)
         bg.fill((255, 255, 255))
+
+        if state == GameState.Menu:
+            menu.render()
+        elif state == GameState.Playing:
+            render_game()
+        elif state == GameState.Credits:
+            credits.render()
+
         for event in pygame.event.get():
             if event.type == pygame.WINDOWCLOSE:
                 pygame.quit()
@@ -79,13 +87,6 @@ if __name__ == "__main__":
                 move_caze()
             if credits.clicked_on_menu(event):
                 state = GameState.Menu
-
-        if state == GameState.Menu:
-            menu.render()
-        elif state == GameState.Playing:
-            render_game()
-        elif state == GameState.Credits:
-            credits.render()
 
         window.blit(bg, (0, 0))
         pygame.display.flip()
