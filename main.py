@@ -76,16 +76,20 @@ if __name__ == "__main__":
             if event.type == pygame.WINDOWCLOSE:
                 pygame.quit()
                 exit()
-            if menu.clicked_on_start_game(event):
-                state = GameState.Playing
-            elif menu.clicked_on_credits(event):
-                state = GameState.Credits
-            elif menu.clicked_on_quit(event):
-                pygame.quit()
-                exit()
+
+            if state == GameState.Menu:
+                if menu.clicked_on_start_game(event):
+                    state = GameState.Playing
+                elif menu.clicked_on_credits(event):
+                    state = GameState.Credits
+                elif menu.clicked_on_quit(event):
+                    pygame.quit()
+                    exit()
+
             if event.type == pygame.KEYDOWN and state == GameState.Playing:
                 move_caze()
-            if credits.clicked_on_menu(event):
+
+            if state == GameState.Credits and credits.clicked_on_menu(event):
                 state = GameState.Menu
 
         window.blit(bg, (0, 0))
