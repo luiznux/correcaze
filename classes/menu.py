@@ -44,21 +44,27 @@ class Menu:
 
     def __render_start_game_button(self, title_surface: pygame.rect.Rect):
         self.__start_button = Button(
-            self.__surface, "Iniciar Jogo",
-            Coordinates(title_surface.x, 150), title_surface.width
+            self.__surface,
+            "Iniciar Jogo",
+            Coordinates(title_surface.x, 150),
+            title_surface.width,
         )
         self.__start_button.render_button_with_centralized_text()
 
     def __render_credits_button(self, title_surface: pygame.rect.Rect):
         self.__credits_button = Button(
-            self.__surface, "Créditos",
-            Coordinates(title_surface.x, 300), title_surface.width
+            self.__surface,
+            "Créditos",
+            Coordinates(title_surface.x, 300),
+            title_surface.width,
         )
         self.__credits_button.render_button_with_centralized_text()
 
     def __render_quit_button(self, title_surface: pygame.rect.Rect):
         self.__quit_button = Button(
-            self.__surface, "Sair",
-            Coordinates(title_surface.x, 450), title_surface.width
+            self.__surface,
+            "Sair",
+            Coordinates(title_surface.x, 450),
+            title_surface.width,
         )
         self.__quit_button.render_button_with_centralized_text()

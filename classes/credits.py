@@ -24,7 +24,10 @@ class Credits:
             title_surface, "Raphael Prandini - 31828728", 300
         )
         self.__menu_button = Button(
-            self.__surface, "Voltar", Coordinates(title_surface.x, 450), title_surface.width
+            self.__surface,
+            "Voltar",
+            Coordinates(title_surface.x, 450),
+            title_surface.width,
         )
         self.__menu_button.render_button_with_centralized_text()
 
