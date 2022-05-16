@@ -10,7 +10,21 @@ class Credits:
 
     def render(self):
         title_surface = self.__render_title()
-        self.__menu_button = self.__render_centralized_button(title_surface, "Voltar", 150)
+        self.__render_centralized_text(
+            title_surface, "Edison Aguiar - 31812295", 150
+        )
+        self.__render_centralized_text(
+            title_surface, "Lucas Morita - 31826199", 200
+        )
+        self.__render_centralized_text(
+            title_surface, "Luiz Tagliaferro - 31861806", 250
+        )
+        self.__render_centralized_text(
+            title_surface, "Raphael Prandini - 31828728", 300
+        )
+        self.__menu_button = self.__render_centralized_button(
+            title_surface, "Voltar", 450
+        )
 
     def clicked_on_menu(self, event: pygame.event.Event) -> bool:
         if self.__menu_button is None:
@@ -56,3 +70,18 @@ class Credits:
 
         mouse_position = pygame.mouse.get_pos()
         return button.collidepoint(mouse_position)
+
+    def __render_centralized_text(
+        self, title_surface: pygame.rect.Rect, text: str, y: int
+    ):
+        button = pygame.Rect((title_surface.x, y, title_surface.width, 100))
+        text_surface = self.__button_font.render(text, True, (0, 0, 0))
+
+        width_margin, height_margin = self.__calculate_button_margins(
+            button, text_surface
+        )
+
+        self.__surface.blit(
+            text_surface,
+            (button.x + width_margin, button.y + height_margin),
+        )
