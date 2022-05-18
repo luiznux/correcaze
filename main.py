@@ -2,53 +2,23 @@ import pygame
 
 from enum import Enum
 
-from classes.caze import Caze
-from classes.menu import Menu
+from classes.game import Game
+from classes.menu import InitialMenu, PauseMenu
 from classes.credits import Credits
 from contants import *
 
 pygame.init()
+
 clock = pygame.time.Clock()
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-bg = pygame.Surface((WIDTH, HEIGHT))
-image = pygame.image.load("assets/caze_placeholder.png").convert_alpha()
+background = pygame.Surface((WIDTH, HEIGHT))
 
 pygame.font.init()
 
-
-def initialize_lanes(surface: pygame.surface.Surface):
-    lanes_width = (surface.get_width() - 200) / 3
-    lanes_height = surface.get_height() - 100
-    return (
-        pygame.Rect(100, 200, lanes_width, lanes_height),
-        pygame.Rect(100 + lanes_width, 200, lanes_width, lanes_height),
-        pygame.Rect(100 + lanes_width * 2 - 1, 200, lanes_width, lanes_height),
-    )
-
-
-def prepare_lanes(surface: pygame.surface.Surface):
-    lane1, lane2, lane3 = initialize_lanes(surface)
-    pygame.draw.rect(surface, color=(220, 20, 10), rect=lane1)
-    pygame.draw.rect(surface, color=(180, 60, 160), rect=lane2)
-    pygame.draw.rect(surface, color=(140, 80, 250), rect=lane3)
-
-
-def render_game():
-    prepare_lanes(bg)
-    bg.blit(cazezinho.image, (lanes[cazezinho.lane], cazezinho.image.get_height()))
-
-
-def move_caze():
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
-            cazezinho.change_lane("left")
-        if event.key == pygame.K_RIGHT:
-            cazezinho.change_lane("right")
-
-
-menu = Menu(bg)
-credits = Credits(bg)
-cazezinho = Caze(bg, image)
+menu = InitialMenu(background)
+menu_pause = PauseMenu(background)
+credits = Credits(background)
+game = Game(background)
 
 
 class GameState(Enum):
@@ -63,14 +33,16 @@ state = GameState.Menu
 if __name__ == "__main__":
     while True:
         clock.tick(FPS)
-        bg.fill((255, 255, 255))
+        background.fill((255, 255, 255))
 
         if state == GameState.Menu:
             menu.render()
         elif state == GameState.Playing:
-            render_game()
+            game.render()
         elif state == GameState.Credits:
             credits.render()
+        elif state == GameState.Paused:
+            menu_pause.render()
 
         for event in pygame.event.get():
             if event.type == pygame.WINDOWCLOSE:
@@ -86,11 +58,24 @@ if __name__ == "__main__":
                     pygame.quit()
                     exit()
 
-            if event.type == pygame.KEYDOWN and state == GameState.Playing:
-                move_caze()
+            if state == GameState.Paused:
+                if menu_pause.clicked_on_start_game(event):
+                    state = GameState.Playing
+                elif menu_pause.clicked_on_credits(event):
+                    state = GameState.Credits
+                elif menu_pause.clicked_on_quit(event):
+                    pygame.quit()
+                    exit()
+
+            if state == GameState.Playing:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        state = GameState.Paused
+                    else:
+                        game.move_caze(event)
 
             if state == GameState.Credits and credits.clicked_on_menu(event):
                 state = GameState.Menu
 
-        window.blit(bg, (0, 0))
+        window.blit(background, (0, 0))
         pygame.display.flip()
