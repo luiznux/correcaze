@@ -2,10 +2,19 @@ from typing import List, Tuple
 from random import randint, choice
 import pygame
 
+from enum import Enum
+
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
-from contants import HEIGHT, LANES_POSITION
+from contants import GREEN, HEIGHT, LANES_POSITION, RED, YELLOW
+
+
+class GameState(Enum):
+    Menu = 1
+    Playing = 2
+    Paused = 3
+    Credits = 4
 
 
 class Game:
@@ -14,14 +23,31 @@ class Game:
         self.__caze = Caze(surface)
         self.__lanes = self.__initialize_lanes()
         self.__lane_elements: List[LaneElement] = []
+        self.__stamina_font = pygame.font.SysFont("Monaco", 30)
 
     def render(self):
         self.__draw_lanes()
         # TODO: Mover isso para um método na classe cazé
-        self.__surface.blit(
-            self.__caze.image,
-            (LANES_POSITION[self.__caze.lane], HEIGHT - self.__caze.get_height()),
+        self.__caze.render(
+            (LANES_POSITION[self.__caze.lane], HEIGHT - self.__caze.get_height())
         )
+
+        stamina_text = self.__stamina_font.render("Stamina:", True, (0, 0, 0))
+        self.__surface.blit(stamina_text, (0, 0))
+
+        stamina_bar = pygame.rect.Rect(
+            stamina_text.get_width() + 10, 0, self.__caze.stamina, 22
+        )
+        # TODO: Mover validações pra métodos do Cazé
+        if self.__caze.stamina >= 50:
+            stamina_bar_color = GREEN
+        elif self.__caze.stamina >= 25:
+            stamina_bar_color = YELLOW
+        else:
+            stamina_bar_color = RED
+        pygame.draw.rect(self.__surface, stamina_bar_color, stamina_bar)
+
+        self.__caze.decrease_stamina()
 
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
@@ -45,6 +71,15 @@ class Game:
 
     def update() -> None:
         pass
+
+    def play(self, event: pygame.event.Event) -> GameState:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                return GameState.Paused
+            else:
+                self.move_caze(event)
+
+        return GameState.Playing
 
     # TODO: Depois esse método deve ser movido pro Cazé, não faz
     # sentido estar exposto aqui.

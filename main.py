@@ -1,8 +1,6 @@
 import pygame
 
-from enum import Enum
-
-from classes.game import Game
+from classes.game import Game, GameState
 from classes.menu import InitialMenu, PauseMenu
 from classes.credits import Credits
 from contants import *
@@ -19,14 +17,6 @@ menu = InitialMenu(background)
 menu_pause = PauseMenu(background)
 credits = Credits(background)
 game = Game(background)
-
-
-class GameState(Enum):
-    Menu = 1
-    Playing = 2
-    Paused = 3
-    Credits = 4
-
 
 state = GameState.Menu
 
@@ -68,11 +58,7 @@ if __name__ == "__main__":
                     exit()
 
             if state == GameState.Playing:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        state = GameState.Paused
-                    else:
-                        game.move_caze(event)
+                state = game.play(event)
 
             if state == GameState.Credits and credits.clicked_on_menu(event):
                 state = GameState.Menu
