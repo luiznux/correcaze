@@ -4,6 +4,7 @@ from enum import Enum
 
 from classes.caze import Caze
 from classes.menu import Menu
+from classes.credits import Credits
 from contants import *
 
 pygame.init()
@@ -46,6 +47,7 @@ def move_caze():
 
 
 menu = Menu(bg)
+credits = Credits(bg)
 cazezinho = Caze(bg, image)
 
 
@@ -62,27 +64,33 @@ if __name__ == "__main__":
     while True:
         clock.tick(FPS)
         bg.fill((255, 255, 255))
-        for event in pygame.event.get():
-            if event.type == pygame.WINDOWCLOSE:
-                pygame.quit()
-                exit()
-            if menu.clicked_on_start_game(event):
-                state = GameState.Playing
-            elif menu.clicked_on_credits(event):
-                state = GameState.Credits
-            elif menu.clicked_on_quit(event):
-                pygame.quit()
-                exit()
-            if event.type == pygame.KEYDOWN and state == GameState.Playing:
-                move_caze()
 
         if state == GameState.Menu:
             menu.render()
         elif state == GameState.Playing:
             render_game()
         elif state == GameState.Credits:
-            # TODO
-            exit()
+            credits.render()
+
+        for event in pygame.event.get():
+            if event.type == pygame.WINDOWCLOSE:
+                pygame.quit()
+                exit()
+
+            if state == GameState.Menu:
+                if menu.clicked_on_start_game(event):
+                    state = GameState.Playing
+                elif menu.clicked_on_credits(event):
+                    state = GameState.Credits
+                elif menu.clicked_on_quit(event):
+                    pygame.quit()
+                    exit()
+
+            if event.type == pygame.KEYDOWN and state == GameState.Playing:
+                move_caze()
+
+            if state == GameState.Credits and credits.clicked_on_menu(event):
+                state = GameState.Menu
 
         window.blit(bg, (0, 0))
         pygame.display.flip()
