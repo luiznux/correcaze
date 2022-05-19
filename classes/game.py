@@ -52,7 +52,6 @@ class Game:
 
     def render(self):
         self.__draw_lanes()
-        # TODO: Mover isso para um método na classe cazé
         self.__caze.render(
             (LANES_POSITION[self.__caze.lane], HEIGHT - self.__caze.get_height())
         )
