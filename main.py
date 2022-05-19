@@ -28,6 +28,7 @@ if __name__ == "__main__":
         if state == GameState.Menu:
             menu.render()
         elif state == GameState.Playing:
+            game.play()
             game.render()
         elif state == GameState.Credits:
             credits.render()
@@ -58,7 +59,7 @@ if __name__ == "__main__":
                     exit()
 
             if state == GameState.Playing:
-                state = game.play(event)
+                state = game.on_event(event)
 
             if state == GameState.Credits and credits.clicked_on_menu(event):
                 state = GameState.Menu

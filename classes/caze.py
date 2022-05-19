@@ -16,7 +16,7 @@ class Caze(pygame.sprite.Sprite):
         self.__surface.blit(self.__image, coordinates)
 
     def increase_stamina(self) -> None:
-        self.__stamina += 10
+        self.__stamina += 1
 
     def decrease_stamina(self) -> None:
         self.__stamina -= 1
