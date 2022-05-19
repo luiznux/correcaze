@@ -19,13 +19,20 @@ class LaneElement(pygame.sprite.Sprite):
     def is_over_screen(self) -> bool:
         return self.__position.y > (HEIGHT - self.__image.get_height())
 
+    def render(self) -> None:
+        self.__surface.blit(self.__image, (self.position_as_tuple))
+
     @property
     def image(self) -> pygame.surface.Surface:
         return self.__image
 
     @property
-    def position(self) -> Tuple[int, int]:
+    def position_as_tuple(self) -> Tuple[int, int]:
         return (self.__position.x, self.__position.y)
+
+    @property
+    def position(self) -> Coordinates:
+        return self.__position
 
 
 class Hamburguer(LaneElement):
