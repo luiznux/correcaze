@@ -2,21 +2,29 @@ from typing import Tuple
 import pygame
 
 from classes.caze import Caze
+from classes.hamburguer import Hamburguer
 from contants import LANES_POSITION
 
 
 class Game:
     def __init__(self, surface: pygame.surface.Surface):
-        image = pygame.image.load("assets/caze_placeholder.png").convert_alpha()
         self.__surface = surface
-        self.__caze = Caze(surface, image)
+        self.__caze = Caze(surface)
         self.__lanes = self.__initialize_lanes()
 
     def render(self):
         self.__draw_lanes()
         self.__surface.blit(
             self.__caze.image,
-            (LANES_POSITION[self.__caze.lane], self.__caze.image.get_height()),
+            (LANES_POSITION[self.__caze.lane], self.__caze.get_height()),
+        )
+        hamburguer = Hamburguer(self.__surface)
+        self.__surface.blit(
+            hamburguer.image,
+            (
+                LANES_POSITION[self.__caze.lane] + (self.__caze.get_height() / 2),
+                hamburguer.image.get_height(),
+            ),
         )
 
     def move_caze(self, event: pygame.event.Event):
