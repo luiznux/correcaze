@@ -20,7 +20,7 @@ class Game:
         # TODO: Mover isso para um método na classe cazé
         self.__surface.blit(
             self.__caze.image,
-            (LANES_POSITION[self.__caze.lane], HEIGHT-self.__caze.get_height()),
+            (LANES_POSITION[self.__caze.lane], HEIGHT - self.__caze.get_height()),
         )
 
         for index, element in enumerate(self.__lane_elements):
@@ -68,9 +68,7 @@ class Game:
         )
         x = LANES_POSITION[random_lane]
         y = 20
-        self.__lane_elements.append(
-            class_type(self.__surface, Coordinates(x, y))
-        )
+        self.__lane_elements.append(class_type(self.__surface, Coordinates(x, y)))
 
     def __initialize_lanes(self) -> Tuple[pygame.Rect, pygame.Rect, pygame.Rect]:
         lanes_width = (self.__surface.get_width() - 200) / 3

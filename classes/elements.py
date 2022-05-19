@@ -6,8 +6,12 @@ from contants import HEIGHT
 
 
 class LaneElement(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.surface.Surface,
-                 position: Coordinates, image: pygame.surface.Surface):
+    def __init__(
+        self,
+        surface: pygame.surface.Surface,
+        position: Coordinates,
+        image: pygame.surface.Surface,
+    ):
         pygame.sprite.Sprite.__init__(self)
         self.__image = image
         self.__surface = surface
@@ -36,15 +40,14 @@ class LaneElement(pygame.sprite.Sprite):
 
 
 class Hamburguer(LaneElement):
-    def __init__(self, surface: pygame.surface.Surface,
-                 position: Coordinates):
+    def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
         image = pygame.image.load("assets/hamburguer.png").convert_alpha()
         image = pygame.transform.scale(image, (150, 150))
         super().__init__(surface, position, image)
 
+
 class Weight(LaneElement):
-    def __init__(self, surface: pygame.surface.Surface,
-                 position: Coordinates):
+    def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
         image = pygame.image.load("assets/weight.png").convert_alpha()
         image = pygame.transform.scale(image, (200, 150))
         super().__init__(surface, position, image)

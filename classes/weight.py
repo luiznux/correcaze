@@ -5,9 +5,9 @@ from typing import Tuple
 from classes.coodinates import Coordinates
 from contants import HEIGHT
 
+
 class Weight(pygame.sprite.Sprite):
-    def __init__(self, surface: pygame.surface.Surface,
-                 position: Coordinates):
+    def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
         pygame.sprite.Sprite.__init__(self)
         self.__image = pygame.image.load("assets/weight.png").convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (200, 150))
