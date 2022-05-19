@@ -1,9 +1,11 @@
-from typing import Tuple
+from typing import List, Tuple
+from random import randint
 import pygame
 
 from classes.caze import Caze
-from classes.hamburguer import Hamburguer
-from contants import LANES_POSITION
+from classes.coodinates import Coordinates
+from classes.hamburguer import Hamburguer, Weight
+from contants import HEIGHT, LANES_POSITION
 
 
 class Game:
@@ -11,22 +13,60 @@ class Game:
         self.__surface = surface
         self.__caze = Caze(surface)
         self.__lanes = self.__initialize_lanes()
+        self.__lane_obstacles: List[Hamburguer] = []
+        self.__lane_objects: List[Weight] = []
 
     def render(self):
         self.__draw_lanes()
+        # TODO: Mover isso para um método na classe cazé
         self.__surface.blit(
             self.__caze.image,
-            (LANES_POSITION[self.__caze.lane], self.__caze.get_height()),
-        )
-        hamburguer = Hamburguer(self.__surface)
-        self.__surface.blit(
-            hamburguer.image,
-            (
-                LANES_POSITION[self.__caze.lane] + (self.__caze.get_height() / 2),
-                hamburguer.image.get_height(),
-            ),
+            (LANES_POSITION[self.__caze.lane], HEIGHT-self.__caze.get_height()),
         )
 
+        for index, obstacle in enumerate(self.__lane_obstacles):
+            if obstacle.is_over_screen():
+                self.__lane_obstacles.pop(index)
+
+        if len(self.__lane_obstacles) == 0:
+            random_lane = randint(0, 2)
+            x = LANES_POSITION[random_lane]
+            y = 20
+            self.__lane_obstacles.append(
+                Hamburguer(self.__surface, Coordinates(x, y))
+            )
+        else:
+            for obstacle in self.__lane_obstacles:
+                obstacle.go_down()
+
+        # TODO: Mover isso para um método na classe Hamburguer
+        for obstacle in self.__lane_obstacles:
+            self.__surface.blit(obstacle.image, (obstacle.position))
+
+        for index, object in enumerate(self.__lane_objects):
+            if object.is_over_screen():
+                self.__lane_objects.pop(index)
+
+        if len(self.__lane_objects) == 0:
+            random_lane = randint(0, 2)
+            x = LANES_POSITION[random_lane]
+            y = 20
+            self.__lane_objects.append(
+                Weight(self.__surface, Coordinates(x, y))
+            )
+        else:
+            for object in self.__lane_objects:
+                object.go_down()
+
+        # TODO: Mover isso para um método na classe Hamburguer
+        for object in self.__lane_objects:
+            self.__surface.blit(object.image, (object.position))
+
+    def update() -> None:
+        pass
+
+    # TODO: Depois esse método deve ser movido pro Cazé, não faz
+    # sentido estar exposto aqui.
     def move_caze(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
