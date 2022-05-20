@@ -7,7 +7,7 @@ from enum import Enum
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
-from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, YELLOW
+from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
 
 
 class GameState(Enum):
@@ -24,7 +24,9 @@ class PointsBar:
 
     def render(self, points: int) -> None:
         text = self.__font.render(f"Pontos: {points}", True, BLACK)
-        self.__surface.blit(text, (500, 0))
+        # Renderiza a quantidade de pontos no centro do eixo x da
+        # tela.
+        self.__surface.blit(text, ((WIDTH / 2) - (text.get_rect().width/2), 0))
 
 
 class StaminaBar:
