@@ -25,8 +25,6 @@ current_menu: Menu = initial_menu
 state = GameState.Menu
 background_music = Sounds()
 
-background_music.play_background_music("hino-do-vasco")
-
 if __name__ == "__main__":
     while True:
         clock.tick(FPS)
