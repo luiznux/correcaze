@@ -81,6 +81,18 @@ class Game:
             if element.is_over_screen():
                 self.__lane_elements.pop(index)
 
+            if element.collided_with(self.__caze.coordinates):
+                if isinstance(element, Weight):
+                    self.__caze.increase_stamina()
+                    self.__caze.increase_points()
+                else:
+                    self.__caze.decrease_stamina()
+                    self.__caze.decrease_points()
+
+                # Se o elemento colidiu com o usuário ele deve ser
+                # removido da tela.
+                self.__lane_elements.pop(index)
+
         # Só renderiza um novo objeto se as lanes estiverem com um
         # elemento ou nenhum
         if len(self.__lane_elements) <= 1:
@@ -94,19 +106,6 @@ class Game:
                     self.__generate_weight_on_random_lane()
                 else:
                     self.__generate_hamburguer_on_random_lane()
-
-        for index, element in enumerate(self.__lane_elements):
-            if element.collided_with(self.__caze.coordinates):
-                if isinstance(element, Weight):
-                    self.__caze.increase_stamina()
-                    self.__caze.increase_points()
-                else:
-                    self.__caze.decrease_stamina()
-                    self.__caze.decrease_points()
-
-                # Se o elemento colidiu com o usuário ele deve ser
-                # removido da tela.
-                self.__lane_elements.pop(index)
 
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
