@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 import pygame
 
 from classes.coodinates import Coordinates
@@ -16,6 +16,7 @@ class LaneElement(pygame.sprite.Sprite):
         self.__image = image
         self.__surface = surface
         self.__position = position
+        self.__rendered_element: Optional[pygame.rect.Rect] = None
 
     def go_down(self) -> None:
         self.__position.y = self.__position.y + 5
@@ -23,8 +24,15 @@ class LaneElement(pygame.sprite.Sprite):
     def is_over_screen(self) -> bool:
         return self.__position.y > (HEIGHT - self.__image.get_height())
 
+    def collided_with(self, position: Tuple[int, int]) -> bool:
+        if self.__rendered_element is None:
+            return False
+        return self.__rendered_element.collidepoint(position)
+
     def render(self) -> None:
-        self.__surface.blit(self.__image, (self.position_as_tuple))
+        self.__rendered_element = self.__surface.blit(
+            self.__image, (self.position_as_tuple)
+        )
 
     @property
     def image(self) -> pygame.surface.Surface:
