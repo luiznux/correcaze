@@ -83,7 +83,7 @@ class Game:
             if element.is_over_screen():
                 self.__lane_elements.pop(index)
 
-            if element.collided_with(self.__caze.coordinates):
+            if element.collided_with(self.__caze.rendered_caze()):
                 if isinstance(element, Weight):
                     self.__caze.increase_stamina()
                     self.__caze.increase_points()

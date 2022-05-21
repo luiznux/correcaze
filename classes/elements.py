@@ -22,12 +22,12 @@ class LaneElement(pygame.sprite.Sprite):
         self.__position.y = self.__position.y + 5
 
     def is_over_screen(self) -> bool:
-        return self.__position.y > (HEIGHT - self.__image.get_height())
+        return self.__position.y > (HEIGHT + self.__image.get_height())
 
-    def collided_with(self, position: Tuple[int, int]) -> bool:
+    def collided_with(self, rect: pygame.rect.Rect) -> bool:
         if self.__rendered_element is None:
             return False
-        return self.__rendered_element.collidepoint(position)
+        return self.__rendered_element.colliderect(rect)
 
     def render(self) -> None:
         self.__rendered_element = self.__surface.blit(
