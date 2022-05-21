@@ -90,9 +90,11 @@ class Game:
                 if isinstance(element, Weight):
                     self.__caze.increase_stamina()
                     self.__caze.increase_points()
+                    self.__sounds.play_sound_effect("meu-deus")
                 else:
                     self.__caze.decrease_stamina()
                     self.__caze.decrease_points()
+                    self.__sounds.play_sound_effect("come-carne")
 
                 # Se o elemento colidiu com o usuário ele deve ser
                 # removido da tela.
