@@ -5,11 +5,9 @@ from classes.coodinates import Coordinates
 
 
 class Caze(pygame.sprite.Sprite):
-
     def __init__(self, surface: pygame.surface.Surface):
         pygame.sprite.Sprite.__init__(self)
-        image = pygame.image.load(
-            "assets/images/caze_placeholder.png").convert_alpha()
+        image = pygame.image.load("assets/images/caze_placeholder.png").convert_alpha()
         self.__image = pygame.transform.scale(image, (200, 200))
         self.__surface = surface
         self.__stamina = 100
