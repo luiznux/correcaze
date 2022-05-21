@@ -4,15 +4,16 @@ import pygame
 from classes.game import Game, GameState
 from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu
 from classes.credits import Credits
+from classes.sounds import Sounds
 from contants import *
 
 pygame.init()
+pygame.mixer.init()
+pygame.font.init()
 
 clock = pygame.time.Clock()
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 background = pygame.Surface((WIDTH, HEIGHT))
-
-pygame.font.init()
 
 initial_menu = InitialMenu(background)
 pause_menu = PauseMenu(background)
@@ -22,7 +23,7 @@ game = Game(background)
 current_menu: Menu = initial_menu
 
 state = GameState.Menu
-
+background_music = Sounds()
 
 if __name__ == "__main__":
     while True:
@@ -47,7 +48,9 @@ if __name__ == "__main__":
                 pygame.quit()
                 exit()
 
-            if state in [GameState.Menu, GameState.Paused, GameState.LoserMenu]:
+            if state in [
+                    GameState.Menu, GameState.Paused, GameState.LoserMenu
+            ]:
                 if current_menu.clicked_on_start_game(event):
                     state = GameState.Playing
                 elif current_menu.clicked_on_credits(event):
