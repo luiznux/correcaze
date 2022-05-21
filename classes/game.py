@@ -7,7 +7,7 @@ from enum import Enum
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
-from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, YELLOW
+from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
 
 
 class GameState(Enum):
@@ -17,19 +17,29 @@ class GameState(Enum):
     Credits = 4
 
 
+class PointsBar:
+    def __init__(self, surface: pygame.surface.Surface) -> None:
+        self.__surface = surface
+        self.__font = pygame.font.SysFont("Monaco", 30)
+
+    def render(self, points: int) -> None:
+        text = self.__font.render(f"Pontos: {points}", True, BLACK)
+        # Renderiza a quantidade de pontos no centro do eixo x da
+        # tela.
+        self.__surface.blit(text, ((WIDTH / 2) - (text.get_rect().width / 2), 0))
+
+
 class StaminaBar:
     def __init__(self, surface: pygame.surface.Surface) -> None:
         self.__surface = surface
-        self.__stamina_font = pygame.font.SysFont("Monaco", 30)
+        self.__font = pygame.font.SysFont("Monaco", 30)
 
     def render(self, stamina: int) -> None:
-        stamina_text = self.__stamina_font.render("Stamina:", True, BLACK)
-        self.__surface.blit(stamina_text, (0, 0))
+        text = self.__font.render("Stamina:", True, BLACK)
+        self.__surface.blit(text, (0, 0))
 
         # Renderiza a barra um pouco depois do texto da stamina
-        stamina_bar = pygame.rect.Rect(
-            stamina_text.get_width() + 10, 0, stamina, 22
-        )
+        bar = pygame.rect.Rect(text.get_width() + 10, 0, stamina, 22)
 
         if stamina >= 50:
             stamina_bar_color = GREEN
@@ -38,7 +48,7 @@ class StaminaBar:
         else:
             stamina_bar_color = RED
 
-        pygame.draw.rect(self.__surface, stamina_bar_color, stamina_bar)
+        pygame.draw.rect(self.__surface, stamina_bar_color, bar)
 
 
 class Game:
@@ -48,7 +58,7 @@ class Game:
         self.__lanes = self.__initialize_lanes()
         self.__lane_elements: List[LaneElement] = []
         self.__stamina_bar = StaminaBar(surface)
-        self.__stamina_font = pygame.font.SysFont("Monaco", 30)
+        self.__points_bar = PointsBar(surface)
 
     def render(self):
         self.__draw_lanes()
@@ -57,6 +67,7 @@ class Game:
         )
 
         self.__stamina_bar.render(self.__caze.stamina)
+        self.__points_bar.render(self.__caze.points)
 
         for element in self.__lane_elements:
             element.render()

@@ -11,6 +11,7 @@ class Caze(pygame.sprite.Sprite):
         self.__stamina = 100
         self._speed = 10
         self._lane = 1
+        self.__points = 0
 
     def render(self, coordinates: Tuple[int, int]):
         self.__surface.blit(self.__image, coordinates)
@@ -38,6 +39,10 @@ class Caze(pygame.sprite.Sprite):
             pass
         else:
             self._lane += 1
+
+    @property
+    def points(self):
+        return self.__points
 
     @property
     def image(self):
