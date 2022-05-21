@@ -15,6 +15,7 @@ class GameState(Enum):
     Playing = 2
     Paused = 3
     Credits = 4
+    LoserMenu = 5
 
 
 class PointsBar:

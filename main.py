@@ -1,7 +1,7 @@
 import pygame
 
 from classes.game import Game, GameState
-from classes.menu import InitialMenu, PauseMenu
+from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu
 from classes.credits import Credits
 from contants import *
 
@@ -13,12 +13,26 @@ background = pygame.Surface((WIDTH, HEIGHT))
 
 pygame.font.init()
 
-menu = InitialMenu(background)
-menu_pause = PauseMenu(background)
+initial_menu = InitialMenu(background)
+pause_menu = PauseMenu(background)
+loser_menu = LoserMenu(background)
 credits = Credits(background)
 game = Game(background)
 
 state = GameState.Menu
+
+
+def menu_actions(menu: Menu, current_state: GameState):
+    if menu.clicked_on_start_game(event):
+        return GameState.Playing
+    elif menu.clicked_on_credits(event):
+        return GameState.Credits
+    elif menu.clicked_on_quit(event):
+        pygame.quit()
+        exit()
+    else:
+        return current_state
+
 
 if __name__ == "__main__":
     while True:
@@ -26,17 +40,19 @@ if __name__ == "__main__":
         background.fill((255, 255, 255))
 
         if game.is_over():
-            state = GameState.Menu
+            state = GameState.LoserMenu
 
         if state == GameState.Menu:
-            menu.render()
+            initial_menu.render()
         elif state == GameState.Playing:
             game.play()
             game.render()
         elif state == GameState.Credits:
             credits.render()
         elif state == GameState.Paused:
-            menu_pause.render()
+            pause_menu.render()
+        elif state == GameState.LoserMenu:
+            loser_menu.render()
 
         for event in pygame.event.get():
             if event.type == pygame.WINDOWCLOSE:
@@ -44,22 +60,13 @@ if __name__ == "__main__":
                 exit()
 
             if state == GameState.Menu:
-                if menu.clicked_on_start_game(event):
-                    state = GameState.Playing
-                elif menu.clicked_on_credits(event):
-                    state = GameState.Credits
-                elif menu.clicked_on_quit(event):
-                    pygame.quit()
-                    exit()
+                state = menu_actions(initial_menu, state)
 
             if state == GameState.Paused:
-                if menu_pause.clicked_on_start_game(event):
-                    state = GameState.Playing
-                elif menu_pause.clicked_on_credits(event):
-                    state = GameState.Credits
-                elif menu_pause.clicked_on_quit(event):
-                    pygame.quit()
-                    exit()
+                state = menu_actions(pause_menu, state)
+
+            if state == GameState.LoserMenu:
+                state = menu_actions(loser_menu, state)
 
             if state == GameState.Playing:
                 state = game.on_event(event)
