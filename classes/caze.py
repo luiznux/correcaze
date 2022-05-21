@@ -1,5 +1,7 @@
-from typing import Tuple
+from typing import Optional, Tuple
 import pygame
+
+from classes.coodinates import Coordinates
 
 
 class Caze(pygame.sprite.Sprite):
@@ -12,15 +14,23 @@ class Caze(pygame.sprite.Sprite):
         self._speed = 10
         self._lane = 1
         self.__points = 0
+        self.__coordinates: Tuple[int, int] = (0, 0)
 
     def render(self, coordinates: Tuple[int, int]):
+        self.__coordinates = coordinates
         self.__surface.blit(self.__image, coordinates)
 
+    def increase_points(self) -> None:
+        self.__points += 10
+
+    def decrease_points(self) -> None:
+        self.__points -= 10
+
     def increase_stamina(self) -> None:
-        self.__stamina += 1
+        self.__stamina += 10
 
     def decrease_stamina(self) -> None:
-        self.__stamina -= 1
+        self.__stamina -= 10
 
     def change_lane(self, direction: str):
         if direction == "left":
@@ -59,6 +69,10 @@ class Caze(pygame.sprite.Sprite):
     @property
     def stamina(self):
         return self.__stamina
+
+    @property
+    def coordinates(self) -> Tuple[int, int]:
+        return self.__coordinates
 
     def get_height(self) -> int:
         return self.__image.get_height()

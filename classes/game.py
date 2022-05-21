@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from random import randint, choice
+from random import choice
 import pygame
 
 from enum import Enum
@@ -72,7 +72,7 @@ class Game:
         for element in self.__lane_elements:
             element.render()
 
-    def update() -> None:
+    def update(self) -> None:
         pass
 
     def play(self) -> None:
@@ -96,7 +96,18 @@ class Game:
                     self.__generate_hamburguer_on_random_lane()
 
         # TODO: Lógica de colisão para diminuir a stamina.
-        self.__caze.decrease_stamina()
+        for index, element in enumerate(self.__lane_elements):
+            if element.collided_with(self.__caze.coordinates):
+                if isinstance(element, Weight):
+                    self.__caze.increase_stamina()
+                    self.__caze.increase_points()
+                else:
+                    self.__caze.decrease_stamina()
+                    self.__caze.decrease_points()
+
+                # Se o elemento colidiu com o usuário ele deve ser
+                # removido da tela.
+                self.__lane_elements.pop(index)
 
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
