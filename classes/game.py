@@ -7,6 +7,7 @@ from enum import Enum
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
+from classes.sounds import Sounds
 from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
 
 
@@ -60,6 +61,7 @@ class Game:
         self.__lane_elements: List[LaneElement] = []
         self.__stamina_bar = StaminaBar(surface)
         self.__points_bar = PointsBar(surface)
+        self.__sounds = Sounds()
         self.__over = False
 
     def render(self):
@@ -78,6 +80,7 @@ class Game:
         pass
 
     def play(self) -> None:
+        self.__sounds.play_background_music("hino-do-vasco")
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
             if element.is_over_screen():
