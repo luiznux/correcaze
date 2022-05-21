@@ -26,7 +26,7 @@ class PointsBar:
         text = self.__font.render(f"Pontos: {points}", True, BLACK)
         # Renderiza a quantidade de pontos no centro do eixo x da
         # tela.
-        self.__surface.blit(text, ((WIDTH / 2) - (text.get_rect().width/2), 0))
+        self.__surface.blit(text, ((WIDTH / 2) - (text.get_rect().width / 2), 0))
 
 
 class StaminaBar:
@@ -39,9 +39,7 @@ class StaminaBar:
         self.__surface.blit(text, (0, 0))
 
         # Renderiza a barra um pouco depois do texto da stamina
-        bar = pygame.rect.Rect(
-            text.get_width() + 10, 0, stamina, 22
-        )
+        bar = pygame.rect.Rect(text.get_width() + 10, 0, stamina, 22)
 
         if stamina >= 50:
             stamina_bar_color = GREEN
