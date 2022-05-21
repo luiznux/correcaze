@@ -6,7 +6,6 @@ from contants import HEIGHT
 
 
 class LaneElement(pygame.sprite.Sprite):
-
     def __init__(
         self,
         surface: pygame.surface.Surface,
@@ -31,8 +30,9 @@ class LaneElement(pygame.sprite.Sprite):
         return self.__rendered_element.collidepoint(position)
 
     def render(self) -> None:
-        self.__rendered_element = self.__surface.blit(self.__image,
-                                                      (self.position_as_tuple))
+        self.__rendered_element = self.__surface.blit(
+            self.__image, (self.position_as_tuple)
+        )
 
     @property
     def image(self) -> pygame.surface.Surface:
@@ -48,16 +48,13 @@ class LaneElement(pygame.sprite.Sprite):
 
 
 class Hamburguer(LaneElement):
-
     def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
-        image = pygame.image.load(
-            "assets/images/hamburguer.png").convert_alpha()
+        image = pygame.image.load("assets/images/hamburguer.png").convert_alpha()
         image = pygame.transform.scale(image, (150, 150))
         super().__init__(surface, position, image)
 
 
 class Weight(LaneElement):
-
     def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
         image = pygame.image.load("assets/images/weight.png").convert_alpha()
         image = pygame.transform.scale(image, (200, 150))
