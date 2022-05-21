@@ -16,8 +16,10 @@ class Caze(pygame.sprite.Sprite):
         self.__points = 0
         self.__coordinates: Tuple[int, int] = (0, 0)
         self.__rendered_image: pygame.rect.Rect = pygame.rect.Rect(
-            self.__coordinates[0], self.__coordinates[1],
-            self.__image.get_width(), self.__image.get_height()
+            self.__coordinates[0],
+            self.__coordinates[1],
+            self.__image.get_width(),
+            self.__image.get_height(),
         )
 
     def render(self, coordinates: Tuple[int, int]):
