@@ -32,6 +32,9 @@ class Caze(pygame.sprite.Sprite):
     def decrease_stamina(self) -> None:
         self.__stamina -= 10
 
+    def is_out_of_stamina(self) -> bool:
+        return self.__stamina <= 0
+
     def change_lane(self, direction: str):
         if direction == "left":
             self.move_left()

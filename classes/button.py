@@ -1,5 +1,4 @@
 import pygame
-from classes import coodinates
 
 from contants import *
 
@@ -27,9 +26,12 @@ class Button:
         mouse_position = pygame.mouse.get_pos()
         return self.__button.collidepoint(mouse_position)
 
-    def render_button_with_centralized_text(self):
+    def render_button_with_centralized_text(self, text: str = ""):
         pygame.draw.rect(self.__surface, self.__color, self.__button)
-        text_surface = self.__font.render(self.__text, True, (0, 0, 0))
+        if text:
+            text_surface = self.__font.render(text, True, (0, 0, 0))
+        else:
+            text_surface = self.__font.render(self.__text, True, (0, 0, 0))
 
         width_margin, height_margin = self.__calculate_button_margins(
             self.__button, text_surface

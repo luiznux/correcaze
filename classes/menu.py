@@ -50,7 +50,7 @@ class Menu:
             Coordinates(title_surface.x, 150),
             title_surface.width,
         )
-        self.__start_button.render_button_with_centralized_text()
+        self.__start_button.render_button_with_centralized_text(text)
 
     def __render_credits_button(self, title_surface: pygame.rect.Rect):
         self.__credits_button = Button(
@@ -85,3 +85,11 @@ class InitialMenu(Menu):
 
     def render(self):
         super().render("Iniciar Jogo")
+
+
+class LoserMenu(Menu):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface, "Você perdeu!")
+
+    def render(self):
+        super().render("Jogar Novamente")
