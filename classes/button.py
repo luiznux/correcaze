@@ -1,5 +1,4 @@
 import pygame
-from classes import coodinates
 
 from contants import *
 
