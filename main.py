@@ -25,6 +25,9 @@ if __name__ == "__main__":
         clock.tick(FPS)
         background.fill((255, 255, 255))
 
+        if game.is_over():
+            state = GameState.Menu
+
         if state == GameState.Menu:
             menu.render()
         elif state == GameState.Playing:

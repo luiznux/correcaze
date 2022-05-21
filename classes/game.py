@@ -59,6 +59,7 @@ class Game:
         self.__lane_elements: List[LaneElement] = []
         self.__stamina_bar = StaminaBar(surface)
         self.__points_bar = PointsBar(surface)
+        self.__over = False
 
     def render(self):
         self.__draw_lanes()
@@ -106,6 +107,15 @@ class Game:
                     self.__generate_weight_on_random_lane()
                 else:
                     self.__generate_hamburguer_on_random_lane()
+
+        if self.__caze.is_out_of_stamina():
+            self.__end_game()
+
+    def is_over(self) -> bool:
+        return self.__over
+
+    def __end_game(self) -> None:
+        self.__over = True
 
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
