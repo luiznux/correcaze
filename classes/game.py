@@ -95,7 +95,6 @@ class Game:
                 else:
                     self.__generate_hamburguer_on_random_lane()
 
-        # TODO: Lógica de colisão para diminuir a stamina.
         for index, element in enumerate(self.__lane_elements):
             if element.collided_with(self.__caze.coordinates):
                 if isinstance(element, Weight):
