@@ -3,14 +3,23 @@ from random import choice, uniform
 from typing import List, Tuple
 
 import pygame
+from contants import (
+    BLACK,
+    GREEN,
+    GREY,
+    HEIGHT,
+    LANES_POSITION,
+    RED,
+    WHITE,
+    WIDTH,
+    YELLOW,
+)
 
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
 from classes.level import Level, LevelBar
 from classes.sounds import Sounds
-from contants import (BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH,
-                      YELLOW)
 
 
 class GameState(Enum):
@@ -19,7 +28,6 @@ class GameState(Enum):
     Paused = 3
     Credits = 4
     LoserMenu = 5
-    # TODO: Criar tela de transição de nível
     LevelTransition = 6
 
 
@@ -165,6 +173,7 @@ class Game:
         self.__over: bool = False
         self.__level: Level = Level.One
         self.__avenue = Avenue(surface)
+        self.__is_transitioning_level = True
 
     def render(self):
         self.__avenue.render()
@@ -179,11 +188,69 @@ class Game:
         for element in self.__lane_elements:
             element.render()
 
+        if self.__is_transitioning_level:
+            width = WIDTH / 3
+            height = HEIGHT / 4
+            rect = pygame.rect.Rect(
+                WIDTH / 2 - width / 2, HEIGHT / 2 - height / 2, width, height
+            )
+            pygame.draw.rect(self.__surface, BLACK, rect)
+
+            font = pygame.font.SysFont("Monaco", 100)
+            title_text = font.render(f"Nível: {self.__level.value}", True, WHITE)
+
+            width_margin = int((rect.width - title_text.get_width()) / 2)
+            height_margin = int((rect.height - title_text.get_height()) / 8)
+
+            self.__surface.blit(
+                title_text, (rect.x + width_margin, rect.y + height_margin)
+            )
+
+            font = pygame.font.SysFont("Monaco", 25)
+            first_text = font.render(
+                "Fuja das comidas não saudáveis",
+                True,
+                WHITE,
+            )
+
+            width_margin = int((rect.width - first_text.get_width()) / 2)
+            height_margin = int((rect.height - first_text.get_height()) / 2)
+
+            self.__surface.blit(
+                first_text,
+                (
+                    rect.x + width_margin,
+                    rect.y + height_margin + title_text.get_height() / 2,
+                ),
+            )
+
+            font = pygame.font.SysFont("Monaco", 25)
+            text = font.render(
+                "Pegue as comidas saudáveis",
+                True,
+                WHITE,
+            )
+
+            width_margin = int((rect.width - text.get_width()) / 2)
+            height_margin = int((rect.height - text.get_height()) / 2)
+
+            self.__surface.blit(
+                text,
+                (
+                    rect.x + width_margin,
+                    rect.y
+                    + height_margin
+                    + title_text.get_height() / 2
+                    + first_text.get_height(),
+                ),
+            )
+            # self.__is_transitioning_level = False
+
     def update(self) -> None:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music(self.__level)
+        # self.__sounds.play_background_music(self.__level)
 
         self.__avenue.play()
 
@@ -218,8 +285,10 @@ class Game:
 
         if self.__level == Level.One and self.__caze.points >= 250:
             self.__level = Level.Two
+            self.__is_transitioning_level = True
         elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
+            self.__is_transitioning_level = True
 
     def is_over(self) -> bool:
         return self.__over
