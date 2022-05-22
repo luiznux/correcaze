@@ -50,5 +50,10 @@ class Sounds:
         mixer.music.play(-1)
         self.__playing_background_music_control[level] = True
 
+    def stop_background_music(self, level: Level) -> None:
+        if mixer.music.get_busy():
+            mixer.music.unload()
+        self.__playing_background_music_control[level] = False
+
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
         return self.__playing_background_music_control[level]

@@ -116,6 +116,7 @@ class Game:
                     self.__generate_hamburguer_on_random_lane()
 
         if self.__caze.is_out_of_stamina():
+            self.__sounds.stop_background_music(self.__level)
             self.__end_game()
 
         if self.__level == Level.One and self.__caze.points >= 250:
