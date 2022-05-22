@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from random import choice, randint
+from random import choice, uniform
 import pygame
 
 from enum import Enum
@@ -62,43 +62,47 @@ class Lane:
         self.__surface = surface
         self._width = (self.__surface.get_width() - 200) / 3
         self._height = self.__surface.get_height()
-        self._y_position = 50
+        self._y_position = 0
         self._line_width = self._width / 8
         self.__line_max_height = self._height / 4
         self._BACKOFF = 100
-        self.__line_y = randint(self._y_position, HEIGHT)
-
+        self.__line_y: float = uniform(self._y_position, HEIGHT)
         if self.__is_line_over_lane(self.__line_y):
             self.__line_height = self.__line_y
         else:
             self.__line_height = self.__line_max_height
-
-    def __is_line_over_lane(self, y: int):
-        return (y + self.__line_max_height) < (
-            self._y_position + self.__line_max_height
-        )
+        self.__SPEED = 5
 
     def render(self) -> None:
         pass
 
     def play(self) -> None:
-        if self.__line_height < self.__line_max_height:
-            self.__line_height += 5
-
-        if self.__line_y >= HEIGHT:
-            self.__line_y = self._y_position
-            self.__line_height = 1
+        if self.__is_line_over_screen():
+            self.__line_y = self._y_position - self.__line_max_height
+            self.__line_height = 0
+        elif self.__is_line_height_at_max():
+            self.__line_y += self.__SPEED
         else:
-            self.__line_y += 5
+            self.__line_height += self.__SPEED
 
     def _render(self, lane_x: float) -> None:
         asphalt = pygame.Rect(lane_x, self._y_position, self._width, self._height)
         pygame.draw.rect(self.__surface, color=GREY, rect=asphalt)
 
-        lane_x = asphalt.x + self._width / 2 - self._line_width
-
-        line = pygame.Rect(lane_x, self.__line_y, self._line_width, self.__line_height)
+        line_x = asphalt.x + self._width / 2 - self._line_width
+        line = pygame.Rect(line_x, self.__line_y, self._line_width, self.__line_height)
         pygame.draw.rect(self.__surface, color=YELLOW, rect=line)
+
+    def __is_line_height_at_max(self) -> bool:
+        return self.__line_height >= self.__line_max_height
+
+    def __is_line_over_screen(self) -> bool:
+        return self.__line_y >= HEIGHT
+
+    def __is_line_over_lane(self, y: float) -> bool:
+        return (y + self.__line_max_height) < (
+            self._y_position + self.__line_max_height
+        )
 
 
 class LeftLane(Lane):
