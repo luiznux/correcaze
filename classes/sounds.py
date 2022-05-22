@@ -2,7 +2,6 @@ from pygame import mixer
 
 
 class Sounds:
-
     def __init__(self) -> None:
         self.__is_playing_background_music = False
         self.__is_playing_sound_effect = False
@@ -19,8 +18,7 @@ class Sounds:
     background_music_map = {
         "hino-do-vasco": "assets/background-music/hino-do-vasco.mp3",
         "hino-do-flamengo": "assets/background-music/hino-do-flamengo.mp3",
-        "hino-do-corinthians":
-        "assets/background-music/hino-do-corinthians.mp3",
+        "hino-do-corinthians": "assets/background-music/hino-do-corinthians.mp3",
     }
 
     def play_sound_effect(self, sound_effect_name: str):

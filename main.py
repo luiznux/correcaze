@@ -1,4 +1,3 @@
-from typing import Optional
 import pygame
 
 from classes.game import Game, GameState
@@ -6,6 +5,7 @@ from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu
 from classes.credits import Credits
 from classes.sounds import Sounds
 from contants import *
+
 
 pygame.init()
 pygame.mixer.init()
@@ -48,9 +48,7 @@ if __name__ == "__main__":
                 pygame.quit()
                 exit()
 
-            if state in [
-                    GameState.Menu, GameState.Paused, GameState.LoserMenu
-            ]:
+            if state in [GameState.Menu, GameState.Paused, GameState.LoserMenu]:
                 if current_menu.clicked_on_start_game(event):
                     state = GameState.Playing
                 elif current_menu.clicked_on_credits(event):
