@@ -4,6 +4,7 @@ import pygame
 
 from enum import Enum
 
+from classes.level import Level, LevelBar
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
@@ -17,27 +18,6 @@ class GameState(Enum):
     Paused = 3
     Credits = 4
     LoserMenu = 5
-
-
-class Level(Enum):
-    One = 1
-    Two = 2
-    Three = 3
-
-    def as_string(self):
-        return self.value
-
-
-class LevelBar:
-    def __init__(self, surface: pygame.surface.Surface) -> None:
-        self.__surface = surface
-        self.__font = pygame.font.SysFont("Monaco", 30)
-
-    def render(self, level: Level) -> None:
-        text = self.__font.render(f"Nível: {level.value}", True, BLACK)
-        # Renderiza a quantidade de pontos no centro do eixo x da
-        # tela.
-        self.__surface.blit(text, (WIDTH - text.get_rect().width, 0))
 
 
 class PointsBar:
@@ -106,7 +86,7 @@ class Game:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music("hino-do-vasco")
+        self.__sounds.play_background_music(self.__level)
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
             if element.is_over_screen():
@@ -135,10 +115,9 @@ class Game:
         if self.__caze.is_out_of_stamina():
             self.__end_game()
 
-        # TODO: Passa de nível
-        if self.__level == Level.One and self.__caze.points >= 100:
+        if self.__level == Level.One and self.__caze.points >= 250:
             self.__level = Level.Two
-        elif self.__level == Level.Two and self.__caze.points >= 200:
+        elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
 
     def is_over(self) -> bool:
