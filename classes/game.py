@@ -51,6 +51,9 @@ class StaminaBar:
         else:
             stamina_bar_color = RED
 
+        max_bar = pygame.rect.Rect(text.get_width() + 10, 0, Caze.MAX_STAMINA, 22)
+
+        pygame.draw.rect(self.__surface, BLACK, max_bar)
         pygame.draw.rect(self.__surface, stamina_bar_color, bar)
 
 

@@ -3,6 +3,8 @@ import pygame
 
 
 class Caze(pygame.sprite.Sprite):
+    MAX_STAMINA = 200
+
     def __init__(self, surface: pygame.surface.Surface):
         pygame.sprite.Sprite.__init__(self)
         image = pygame.image.load("assets/images/caze_placeholder.png").convert_alpha()
@@ -34,7 +36,13 @@ class Caze(pygame.sprite.Sprite):
         self.__points -= 10
 
     def increase_stamina(self) -> None:
-        self.__stamina += 10
+        if self.__stamina < self.MAX_STAMINA:
+            # Se o aumento ultrapassa o limite então maximiza a
+            # stamina.
+            if (self.__stamina + 10) > self.MAX_STAMINA:
+                self.__stamina = self.MAX_STAMINA
+            else:
+                self.__stamina += 10
 
     def decrease_stamina(self) -> None:
         self.__stamina -= 10
