@@ -1,6 +1,6 @@
-import pygame
-
 from typing import Tuple
+
+import pygame
 
 from classes.coodinates import Coordinates
 from contants import HEIGHT

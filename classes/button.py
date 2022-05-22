@@ -1,8 +1,7 @@
 import pygame
 
-from contants import *
-
 from classes.coodinates import Coordinates
+from contants import *
 
 
 class Button:

@@ -1,6 +1,7 @@
+from enum import Enum
+
 import pygame
 
-from enum import Enum
 from contants import BLACK, WIDTH
 
 

@@ -1,15 +1,16 @@
-from typing import List, Tuple
+from enum import Enum
 from random import choice, uniform
+from typing import List, Tuple
+
 import pygame
 
-from enum import Enum
-
-from classes.level import Level, LevelBar
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
+from classes.level import Level, LevelBar
 from classes.sounds import Sounds
-from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW, GREY
+from contants import (BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH,
+                      YELLOW)
 
 
 class GameState(Enum):
@@ -18,6 +19,8 @@ class GameState(Enum):
     Paused = 3
     Credits = 4
     LoserMenu = 5
+    # TODO: Criar tela de transição de nível
+    LevelTransition = 6
 
 
 class PointsBar:
@@ -180,7 +183,7 @@ class Game:
         pass
 
     def play(self) -> None:
-        # self.__sounds.play_background_music(self.__level)
+        self.__sounds.play_background_music(self.__level)
 
         self.__avenue.play()
 
@@ -221,26 +224,17 @@ class Game:
     def is_over(self) -> bool:
         return self.__over
 
-    def __end_game(self) -> None:
-        self.__over = True
-
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 return GameState.Paused
             else:
-                self.__move_caze(event)
+                self.__caze.on_event(event)
 
         return GameState.Playing
 
-    # TODO: Depois esse método deve ser movido pro Cazé, não faz
-    # sentido estar exposto aqui.
-    def __move_caze(self, event: pygame.event.Event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self.__caze.change_lane("left")
-            if event.key == pygame.K_RIGHT:
-                self.__caze.change_lane("right")
+    def __end_game(self) -> None:
+        self.__over = True
 
     def __generate_hamburguer_on_random_lane(self):
         self.__generate_element_on_random_lane(Hamburguer)

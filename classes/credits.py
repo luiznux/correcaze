@@ -1,10 +1,10 @@
 from typing import Optional
-import pygame
-from classes.coodinates import Coordinates
 
-from contants import *
+import pygame
 
 from classes.button import Button
+from classes.coodinates import Coordinates
+from contants import *
 
 
 class Credits:
