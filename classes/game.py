@@ -173,6 +173,30 @@ class Game:
         )
 
     def __draw_lanes(self):
-        pygame.draw.rect(self.__surface, color=(220, 20, 10), rect=self.__lanes[0])
-        pygame.draw.rect(self.__surface, color=(180, 60, 160), rect=self.__lanes[1])
-        pygame.draw.rect(self.__surface, color=(140, 80, 250), rect=self.__lanes[2])
+        GREY = (128, 128, 128)
+
+        pygame.draw.rect(self.__surface, color=GREY, rect=self.__lanes[0])
+        pygame.draw.rect(self.__surface, color=GREY, rect=self.__lanes[1])
+        pygame.draw.rect(self.__surface, color=GREY, rect=self.__lanes[2])
+
+        lane = self.__lanes[0]
+        width = lane.width / 8
+        max_height = lane.height / 4
+
+        first_lane = self.__lanes[0]
+        first_bar_x = first_lane.x + first_lane.width / 2 - width
+        y = first_lane.y + 100
+        street_bar = pygame.Rect(first_bar_x, y, width, max_height)
+        pygame.draw.rect(self.__surface, color=YELLOW, rect=street_bar)
+
+        second_lane = self.__lanes[1]
+        second_bar_x = second_lane.x + second_lane.width / 2 - width
+        y = second_lane.y + 100
+        street_bar = pygame.Rect(second_bar_x, y, width, max_height)
+        pygame.draw.rect(self.__surface, color=YELLOW, rect=street_bar)
+
+        third_lane = self.__lanes[2]
+        third_bar_x = third_lane.x + third_lane.width / 2 - width
+        y = third_lane.y + 100
+        street_bar = pygame.Rect(third_bar_x, y, width, max_height)
+        pygame.draw.rect(self.__surface, color=YELLOW, rect=street_bar)
