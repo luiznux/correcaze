@@ -1,7 +1,9 @@
 from typing import Optional, Tuple
 import pygame
+from classes.caze import Caze
 
 from classes.coodinates import Coordinates
+from classes.sounds import Sounds
 from contants import HEIGHT
 
 
@@ -34,6 +36,9 @@ class LaneElement(pygame.sprite.Sprite):
             self.__image, (self.position_as_tuple)
         )
 
+    def on_collision(self, caze: Caze, sounds: Sounds) -> None:
+        pass
+
     @property
     def image(self) -> pygame.surface.Surface:
         return self.__image
@@ -53,9 +58,19 @@ class Hamburguer(LaneElement):
         image = pygame.transform.scale(image, (150, 150))
         super().__init__(surface, position, image)
 
+    def on_collision(self, caze: Caze, sounds: Sounds) -> None:
+        caze.decrease_stamina()
+        caze.decrease_points()
+        sounds.play_sound_effect("come-carne")
+
 
 class Weight(LaneElement):
     def __init__(self, surface: pygame.surface.Surface, position: Coordinates):
         image = pygame.image.load("assets/images/weight.png").convert_alpha()
         image = pygame.transform.scale(image, (200, 150))
         super().__init__(surface, position, image)
+
+    def on_collision(self, caze: Caze, sounds: Sounds) -> None:
+        caze.increase_stamina()
+        caze.increase_points()
+        sounds.play_sound_effect("meu-deus")

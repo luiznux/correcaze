@@ -4,6 +4,7 @@ import pygame
 
 from enum import Enum
 
+from classes.level import Level, LevelBar
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
@@ -55,14 +56,18 @@ class StaminaBar:
 
 class Game:
     def __init__(self, surface: pygame.surface.Surface):
-        self.__surface = surface
-        self.__caze = Caze(surface)
-        self.__lanes = self.__initialize_lanes()
+        self.__surface: pygame.surface.Surface = surface
+        self.__caze: Caze = Caze(surface)
+        self.__lanes: Tuple[
+            pygame.Rect, pygame.Rect, pygame.Rect
+        ] = self.__initialize_lanes()
         self.__lane_elements: List[LaneElement] = []
-        self.__stamina_bar = StaminaBar(surface)
-        self.__points_bar = PointsBar(surface)
-        self.__sounds = Sounds()
-        self.__over = False
+        self.__stamina_bar: StaminaBar = StaminaBar(surface)
+        self.__points_bar: PointsBar = PointsBar(surface)
+        self.__level_bar: LevelBar = LevelBar(surface)
+        self.__sounds: Sounds = Sounds()
+        self.__over: bool = False
+        self.__level: Level = Level.One
 
     def render(self):
         self.__draw_lanes()
@@ -72,6 +77,7 @@ class Game:
 
         self.__stamina_bar.render(self.__caze.stamina)
         self.__points_bar.render(self.__caze.points)
+        self.__level_bar.render(self.__level)
 
         for element in self.__lane_elements:
             element.render()
@@ -80,22 +86,14 @@ class Game:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music("hino-do-vasco")
+        self.__sounds.play_background_music(self.__level)
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
             if element.is_over_screen():
                 self.__lane_elements.pop(index)
 
             if element.collided_with(self.__caze.rendered_caze()):
-                if isinstance(element, Weight):
-                    self.__caze.increase_stamina()
-                    self.__caze.increase_points()
-                    self.__sounds.play_sound_effect("meu-deus")
-                else:
-                    self.__caze.decrease_stamina()
-                    self.__caze.decrease_points()
-                    self.__sounds.play_sound_effect("come-carne")
-
+                element.on_collision(self.__caze, self.__sounds)
                 # Se o elemento colidiu com o usuário ele deve ser
                 # removido da tela.
                 self.__lane_elements.pop(index)
@@ -116,6 +114,11 @@ class Game:
 
         if self.__caze.is_out_of_stamina():
             self.__end_game()
+
+        if self.__level == Level.One and self.__caze.points >= 250:
+            self.__level = Level.Two
+        elif self.__level == Level.Two and self.__caze.points >= 500:
+            self.__level = Level.Three
 
     def is_over(self) -> bool:
         return self.__over

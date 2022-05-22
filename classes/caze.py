@@ -1,7 +1,5 @@
-from typing import Optional, Tuple
+from typing import Tuple
 import pygame
-
-from classes.coodinates import Coordinates
 
 
 class Caze(pygame.sprite.Sprite):
