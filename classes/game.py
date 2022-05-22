@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from random import choice
+from random import choice, randint
 import pygame
 
 from enum import Enum
@@ -61,22 +61,43 @@ class Lane:
     def __init__(self, surface: pygame.surface.Surface):
         self.__surface = surface
         self._width = (self.__surface.get_width() - 200) / 3
-        self._height = self.__surface.get_height() - 10
-        self._y_position = 200
+        self._height = self.__surface.get_height()
+        self._y_position = 50
         self._line_width = self._width / 8
-        self._line_max_height = self._height / 4
+        self.__line_max_height = self._height / 4
         self._BACKOFF = 100
+        self.__line_y = randint(self._y_position, HEIGHT)
+
+        if self.__is_line_over_lane(self.__line_y):
+            self.__line_height = self.__line_y
+        else:
+            self.__line_height = self.__line_max_height
+
+    def __is_line_over_lane(self, y: int):
+        return (y + self.__line_max_height) < (
+            self._y_position + self.__line_max_height
+        )
 
     def render(self) -> None:
         pass
 
-    def _render(self, x: float) -> None:
-        asphalt = pygame.Rect(x, self._y_position, self._width, self._height)
+    def play(self) -> None:
+        if self.__line_height < self.__line_max_height:
+            self.__line_height += 5
+
+        if self.__line_y >= HEIGHT:
+            self.__line_y = self._y_position
+            self.__line_height = 1
+        else:
+            self.__line_y += 5
+
+    def _render(self, lane_x: float) -> None:
+        asphalt = pygame.Rect(lane_x, self._y_position, self._width, self._height)
         pygame.draw.rect(self.__surface, color=GREY, rect=asphalt)
 
-        x = asphalt.x + self._width / 2 - self._line_width
-        y = asphalt.y + 100
-        line = pygame.Rect(x, y, self._line_width, self._line_max_height)
+        lane_x = asphalt.x + self._width / 2 - self._line_width
+
+        line = pygame.Rect(lane_x, self.__line_y, self._line_width, self.__line_height)
         pygame.draw.rect(self.__surface, color=YELLOW, rect=line)
 
 
@@ -109,16 +130,20 @@ class Avenue:
         self.__surface = surface
         self.__lanes = self.__initialize_lanes()
 
+    def render(self):
+        for lane in self.__lanes:
+            lane.render()
+
+    def play(self):
+        for lane in self.__lanes:
+            lane.play()
+
     def __initialize_lanes(self) -> Tuple[Lane, Lane, Lane]:
         return (
             RightLane(self.__surface),
             MiddleLane(self.__surface),
             LeftLane(self.__surface),
         )
-
-    def render(self):
-        for lane in self.__lanes:
-            lane.render()
 
 
 class Game:
@@ -151,7 +176,10 @@ class Game:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music(self.__level)
+        # self.__sounds.play_background_music(self.__level)
+
+        self.__avenue.play()
+
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
             if element.is_over_screen():
