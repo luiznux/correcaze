@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from random import choice
+from random import choice, uniform
 import pygame
 
 from enum import Enum
@@ -9,7 +9,7 @@ from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
 from classes.sounds import Sounds
-from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
+from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW, GREY
 
 
 class GameState(Enum):
@@ -57,13 +57,103 @@ class StaminaBar:
         pygame.draw.rect(self.__surface, stamina_bar_color, bar)
 
 
+class Lane:
+    def __init__(self, surface: pygame.surface.Surface):
+        self.__surface = surface
+        self._width = (self.__surface.get_width() - 200) / 3
+        self._height = self.__surface.get_height()
+        self._y_position = 0
+        self._line_width = self._width / 8
+        self.__line_max_height = self._height / 4
+        self._BACKOFF = 100
+        self.__line_y: float = uniform(self._y_position, HEIGHT)
+        if self.__is_line_over_lane(self.__line_y):
+            self.__line_height = self.__line_y
+        else:
+            self.__line_height = self.__line_max_height
+        self.__SPEED = 5
+
+    def render(self) -> None:
+        pass
+
+    def play(self) -> None:
+        if self.__is_line_over_screen():
+            self.__line_y = self._y_position - self.__line_max_height
+            self.__line_height = 0
+        elif self.__is_line_height_at_max():
+            self.__line_y += self.__SPEED
+        else:
+            self.__line_height += self.__SPEED
+
+    def _render(self, lane_x: float) -> None:
+        asphalt = pygame.Rect(lane_x, self._y_position, self._width, self._height)
+        pygame.draw.rect(self.__surface, color=GREY, rect=asphalt)
+
+        line_x = asphalt.x + self._width / 2 - self._line_width
+        line = pygame.Rect(line_x, self.__line_y, self._line_width, self.__line_height)
+        pygame.draw.rect(self.__surface, color=YELLOW, rect=line)
+
+    def __is_line_height_at_max(self) -> bool:
+        return self.__line_height >= self.__line_max_height
+
+    def __is_line_over_screen(self) -> bool:
+        return self.__line_y >= HEIGHT
+
+    def __is_line_over_lane(self, y: float) -> bool:
+        return (y + self.__line_max_height) < (
+            self._y_position + self.__line_max_height
+        )
+
+
+class LeftLane(Lane):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface)
+
+    def render(self):
+        self._render(self._BACKOFF)
+
+
+class MiddleLane(Lane):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface)
+
+    def render(self):
+        self._render(self._width + self._BACKOFF)
+
+
+class RightLane(Lane):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface)
+
+    def render(self):
+        self._render(self._width * 2 - 1 + self._BACKOFF)
+
+
+class Avenue:
+    def __init__(self, surface: pygame.surface.Surface):
+        self.__surface = surface
+        self.__lanes = self.__initialize_lanes()
+
+    def render(self):
+        for lane in self.__lanes:
+            lane.render()
+
+    def play(self):
+        for lane in self.__lanes:
+            lane.play()
+
+    def __initialize_lanes(self) -> Tuple[Lane, Lane, Lane]:
+        return (
+            RightLane(self.__surface),
+            MiddleLane(self.__surface),
+            LeftLane(self.__surface),
+        )
+
+
 class Game:
     def __init__(self, surface: pygame.surface.Surface):
         self.__surface: pygame.surface.Surface = surface
         self.__caze: Caze = Caze(surface)
-        self.__lanes: Tuple[
-            pygame.Rect, pygame.Rect, pygame.Rect
-        ] = self.__initialize_lanes()
         self.__lane_elements: List[LaneElement] = []
         self.__stamina_bar: StaminaBar = StaminaBar(surface)
         self.__points_bar: PointsBar = PointsBar(surface)
@@ -71,9 +161,10 @@ class Game:
         self.__sounds: Sounds = Sounds()
         self.__over: bool = False
         self.__level: Level = Level.One
+        self.__avenue = Avenue(surface)
 
     def render(self):
-        self.__draw_lanes()
+        self.__avenue.render()
         self.__caze.render(
             (LANES_POSITION[self.__caze.lane], HEIGHT - self.__caze.get_height())
         )
@@ -89,7 +180,10 @@ class Game:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music(self.__level)
+        # self.__sounds.play_background_music(self.__level)
+
+        self.__avenue.play()
+
         for index, element in enumerate(self.__lane_elements):
             element.go_down()
             if element.is_over_screen():
@@ -162,17 +256,3 @@ class Game:
         x = LANES_POSITION[random_lane]
         y = 20
         self.__lane_elements.append(class_type(self.__surface, Coordinates(x, y)))
-
-    def __initialize_lanes(self) -> Tuple[pygame.Rect, pygame.Rect, pygame.Rect]:
-        lanes_width = (self.__surface.get_width() - 200) / 3
-        lanes_height = self.__surface.get_height() - 10
-        return (
-            pygame.Rect(100, 200, lanes_width, lanes_height),
-            pygame.Rect(100 + lanes_width, 200, lanes_width, lanes_height),
-            pygame.Rect(100 + lanes_width * 2 - 1, 200, lanes_width, lanes_height),
-        )
-
-    def __draw_lanes(self):
-        pygame.draw.rect(self.__surface, color=(220, 20, 10), rect=self.__lanes[0])
-        pygame.draw.rect(self.__surface, color=(180, 60, 160), rect=self.__lanes[1])
-        pygame.draw.rect(self.__surface, color=(140, 80, 250), rect=self.__lanes[2])
