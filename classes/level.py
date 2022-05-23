@@ -24,39 +24,39 @@ class LevelBar:
 
 
 class LevelTransition:
-    def __init__(self, surface: pygame.surface.Surface) -> None:
+    def __init__(self, surface: pygame.surface.Surface, level: Level) -> None:
         self._surface = surface
         self.__title_font = pygame.font.SysFont("Monaco", 100)
         self._instructions_font = pygame.font.SysFont("Monaco", 25)
+        self._background = self.__create_background()
+        self._title = self.__title_font.render(f"Nível {level.value}", True, WHITE)
 
-    def render(self, level: Level) -> None:
+    def render(self) -> None:
         pass
 
-    def _render(self, level: Level) -> Tuple[pygame.rect.Rect, pygame.surface.Surface]:
-        background = self._render_background()
-        title = self.__render_title(background, level)
-        return background, title
+    def _render(self) -> None:
+        self.__render_background()
+        self.__render_title()
 
-    def __render_title(
-        self, background: pygame.rect.Rect, level: Level
-    ) -> pygame.surface.Surface:
-        title = self.__title_font.render(f"Nível {level.value}", True, WHITE)
+    def __create_background(self) -> pygame.rect.Rect:
+        width = WIDTH / 3
+        height = HEIGHT / 3
+        return pygame.rect.Rect(
+            WIDTH / 2 - width / 2, HEIGHT / 2 - height / 2, width, height
+        )
+
+    def __render_background(self) -> None:
+        pygame.draw.rect(self._surface, BLACK, self._background)
+
+    def __render_title(self):
         width_margin, height_margin = self.__calculate_margin_for_title(
-            background, title
+            self._background, self._title
         )
 
         self._surface.blit(
-            title, (background.x + width_margin, background.y + height_margin)
+            self._title,
+            (self._background.x + width_margin, self._background.y + height_margin),
         )
-        return title
-
-    def _render_background(self) -> pygame.rect.Rect:
-        width = WIDTH / 3
-        height = HEIGHT / 4
-        rect = pygame.rect.Rect(
-            WIDTH / 2 - width / 2, HEIGHT / 2 - height / 2, width, height
-        )
-        return pygame.draw.rect(self._surface, BLACK, rect)
 
     def __calculate_margin_for_title(
         self, rect: pygame.rect.Rect, title: pygame.surface.Surface
@@ -69,65 +69,126 @@ class LevelTransition:
         self, rect: pygame.rect.Rect, title: pygame.surface.Surface
     ) -> Tuple[int, int]:
         width_margin = int((rect.width - title.get_width()) / 2)
-        height_margin = int((rect.height - title.get_height()) / 2)
+        height_margin = int((rect.height - self._instructions_font.get_height()) / 2)
         return width_margin, height_margin
 
 
 class LevelOneTransition(LevelTransition):
-    def __init__(self, surface: pygame.surface.Surface) -> None:
-        super().__init__(surface)
-
-    def render(self, level: Level) -> None:
-        background, title = self._render(level)
-        first_line = self.__render_first_line(background, title)
-        self.__render_second_line(background, title, first_line)
-
-    def __render_first_line(
-        self, background: pygame.rect.Rect, title: pygame.surface.Surface
-    ) -> pygame.surface.Surface:
-        first_line = self._instructions_font.render(
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface, Level.One)
+        self._first_line = self._instructions_font.render(
             "Fuja das comidas não saudáveis",
             True,
             WHITE,
         )
-
-        width_margin, height_margin = self._calculate_margin_for_instructions(
-            background, first_line
-        )
-
-        self._surface.blit(
-            first_line,
-            (
-                background.x + width_margin,
-                background.y + height_margin + title.get_height() / 2,
-            ),
-        )
-
-        return first_line
-
-    def __render_second_line(
-        self,
-        background: pygame.rect.Rect,
-        title: pygame.surface.Surface,
-        first_line: pygame.surface.Surface,
-    ):
-        second_line = self._instructions_font.render(
+        self._second_line = self._instructions_font.render(
             "Pegue as comidas saudáveis",
             True,
             WHITE,
         )
 
+    def render(self) -> None:
+        self._render()
+        self._render_instructions()
+
+    def _render_instructions(self) -> None:
+        self._render_first_line()
+        self._render_second_line()
+
+    def _render_first_line(self):
         width_margin, height_margin = self._calculate_margin_for_instructions(
-            background, second_line
+            self._background, self._first_line
         )
 
         self._surface.blit(
-            second_line,
+            self._first_line,
             (
-                background.x + width_margin,
-                background.y
+                self._background.x + width_margin,
+                self._background.y + height_margin + self._title.get_height() / 2,
+            ),
+        )
+
+    def _render_second_line(self):
+        width_margin, height_margin = self._calculate_margin_for_instructions(
+            self._background, self._second_line
+        )
+
+        self._surface.blit(
+            self._second_line,
+            (
+                self._background.x + width_margin,
+                self._background.y
                 + height_margin
-                + title.get_height() / 2
-                + first_line.get_height(),
+                + self._title.get_height() / 2
+                + self._instructions_font.get_height(),
+            ),
+        )
+
+
+class LevelTwoTransition(LevelTransition):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface, Level.Two)
+        self.__level_one_transition = LevelOneTransition(surface)
+        self._third_line = self._instructions_font.render(
+            "Pegue os halteres para ganhar mais pontos",
+            True,
+            WHITE,
+        )
+
+    def render(self) -> None:
+        super()._render()
+        self.__level_one_transition._render_instructions()
+        self._render_instructions()
+
+    def _render_instructions(self) -> None:
+        self._render_third_line()
+
+    def _render_third_line(self):
+        width_margin, height_margin = self._calculate_margin_for_instructions(
+            self._background, self._third_line
+        )
+
+        self._surface.blit(
+            self._third_line,
+            (
+                self._background.x + width_margin,
+                self._background.y
+                + height_margin
+                + self._title.get_height() / 2
+                + self._instructions_font.get_height() * 2,
+            ),
+        )
+
+
+class LevelThreeTransition(LevelTransition):
+    def __init__(self, surface: pygame.surface.Surface):
+        super().__init__(surface, Level.Three)
+        self.__level_one_transition = LevelOneTransition(surface)
+        self.__level_two_transition = LevelTwoTransition(surface)
+        self._fourth_line = self._instructions_font.render(
+            "Agora o cazé está mais rápido!",
+            True,
+            WHITE,
+        )
+
+    def render(self) -> None:
+        super()._render()
+        self.__level_one_transition._render_instructions()
+        self.__level_two_transition._render_instructions()
+        self._render_fourth_line()
+
+    def _render_fourth_line(self):
+        width_margin, height_margin = self._calculate_margin_for_instructions(
+            self._background, self._fourth_line
+        )
+
+        self._surface.blit(
+            self._fourth_line,
+            (
+                self._background.x + width_margin,
+                self._background.y
+                + height_margin
+                + self._title.get_height() / 2
+                + self._instructions_font.get_height() * 3,
             ),
         )

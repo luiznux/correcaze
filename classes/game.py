@@ -175,6 +175,8 @@ class Game:
         self.__avenue = Avenue(surface)
         self.__is_transitioning_level = True
         self.__transition = LevelOneTransition(self.__surface)
+        # self.__transition = LevelTwoTransition(self.__surface)
+        # self.__transition = LevelThreeTransition(self.__surface)
 
     def render(self):
         self.__avenue.render()
@@ -190,7 +192,7 @@ class Game:
             element.render()
 
         if self.__is_transitioning_level:
-            self.__transition.render(self.__level)
+            self.__transition.render()
             # self.__is_transitioning_level = False
 
     def update(self) -> None:
