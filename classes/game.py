@@ -18,7 +18,7 @@ from contants import (
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
-from classes.level import Level, LevelBar
+from classes.level import Level, LevelBar, LevelOneTransition
 from classes.sounds import Sounds
 
 
@@ -174,6 +174,7 @@ class Game:
         self.__level: Level = Level.One
         self.__avenue = Avenue(surface)
         self.__is_transitioning_level = True
+        self.__transition = LevelOneTransition(self.__surface)
 
     def render(self):
         self.__avenue.render()
@@ -189,61 +190,7 @@ class Game:
             element.render()
 
         if self.__is_transitioning_level:
-            width = WIDTH / 3
-            height = HEIGHT / 4
-            rect = pygame.rect.Rect(
-                WIDTH / 2 - width / 2, HEIGHT / 2 - height / 2, width, height
-            )
-            pygame.draw.rect(self.__surface, BLACK, rect)
-
-            font = pygame.font.SysFont("Monaco", 100)
-            title_text = font.render(f"Nível: {self.__level.value}", True, WHITE)
-
-            width_margin = int((rect.width - title_text.get_width()) / 2)
-            height_margin = int((rect.height - title_text.get_height()) / 8)
-
-            self.__surface.blit(
-                title_text, (rect.x + width_margin, rect.y + height_margin)
-            )
-
-            font = pygame.font.SysFont("Monaco", 25)
-            first_text = font.render(
-                "Fuja das comidas não saudáveis",
-                True,
-                WHITE,
-            )
-
-            width_margin = int((rect.width - first_text.get_width()) / 2)
-            height_margin = int((rect.height - first_text.get_height()) / 2)
-
-            self.__surface.blit(
-                first_text,
-                (
-                    rect.x + width_margin,
-                    rect.y + height_margin + title_text.get_height() / 2,
-                ),
-            )
-
-            font = pygame.font.SysFont("Monaco", 25)
-            text = font.render(
-                "Pegue as comidas saudáveis",
-                True,
-                WHITE,
-            )
-
-            width_margin = int((rect.width - text.get_width()) / 2)
-            height_margin = int((rect.height - text.get_height()) / 2)
-
-            self.__surface.blit(
-                text,
-                (
-                    rect.x + width_margin,
-                    rect.y
-                    + height_margin
-                    + title_text.get_height() / 2
-                    + first_text.get_height(),
-                ),
-            )
+            self.__transition.render(self.__level)
             # self.__is_transitioning_level = False
 
     def update(self) -> None:
