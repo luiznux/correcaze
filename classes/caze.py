@@ -1,4 +1,5 @@
 from typing import Tuple
+
 import pygame
 
 
@@ -50,7 +51,14 @@ class Caze(pygame.sprite.Sprite):
     def is_out_of_stamina(self) -> bool:
         return self.__stamina <= 0
 
-    def change_lane(self, direction: str):
+    def on_event(self, event: pygame.event.Event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                self.__change_lane("left")
+            if event.key == pygame.K_RIGHT:
+                self.__change_lane("right")
+
+    def __change_lane(self, direction: str):
         if direction == "left":
             self.move_left()
         else:

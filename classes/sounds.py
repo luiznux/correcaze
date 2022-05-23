@@ -1,4 +1,5 @@
 from typing import Dict
+
 from pygame import mixer
 
 from classes.level import Level

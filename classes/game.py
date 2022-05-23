@@ -1,15 +1,21 @@
-from typing import List, Tuple
-from random import choice, uniform
-import pygame
-
 from enum import Enum
+from random import choice, uniform
+from typing import List, Tuple
 
-from classes.level import Level, LevelBar
+import pygame
+from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
+
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
+from classes.level import (
+    Level,
+    LevelBar,
+    LevelOneTransition,
+    LevelThreeTransition,
+    LevelTwoTransition,
+)
 from classes.sounds import Sounds
-from contants import BLACK, GREEN, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW, GREY
 
 
 class GameState(Enum):
@@ -162,6 +168,8 @@ class Game:
         self.__over: bool = False
         self.__level: Level = Level.One
         self.__avenue = Avenue(surface)
+        self.__is_transitioning_level = True
+        self.__transition = LevelOneTransition(self.__surface)
 
     def render(self):
         self.__avenue.render()
@@ -176,11 +184,17 @@ class Game:
         for element in self.__lane_elements:
             element.render()
 
+        if self.__is_transitioning_level:
+            self.__transition.render()
+            return
+
     def update(self) -> None:
         pass
 
     def play(self) -> None:
         # self.__sounds.play_background_music(self.__level)
+        if self.__is_transitioning_level:
+            return
 
         self.__avenue.play()
 
@@ -215,32 +229,31 @@ class Game:
 
         if self.__level == Level.One and self.__caze.points >= 250:
             self.__level = Level.Two
+            self.__transition = LevelTwoTransition(self.__surface)
+            self.__is_transitioning_level = True
         elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
+            self.__transition = LevelThreeTransition(self.__surface)
+            self.__is_transitioning_level = True
 
     def is_over(self) -> bool:
         return self.__over
-
-    def __end_game(self) -> None:
-        self.__over = True
 
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 return GameState.Paused
             else:
-                self.__move_caze(event)
+                self.__caze.on_event(event)
+
+            if self.__is_transitioning_level:
+                if event.key == pygame.K_RETURN:
+                    self.__is_transitioning_level = False
 
         return GameState.Playing
 
-    # TODO: Depois esse método deve ser movido pro Cazé, não faz
-    # sentido estar exposto aqui.
-    def __move_caze(self, event: pygame.event.Event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self.__caze.change_lane("left")
-            if event.key == pygame.K_RIGHT:
-                self.__caze.change_lane("right")
+    def __end_game(self) -> None:
+        self.__over = True
 
     def __generate_hamburguer_on_random_lane(self):
         self.__generate_element_on_random_lane(Hamburguer)

@@ -1,6 +1,5 @@
+from typing import Tuple
 import pygame
-
-from contants import *
 
 from classes.coodinates import Coordinates
 
@@ -44,7 +43,7 @@ class Button:
 
     def __calculate_button_margins(
         self, button: pygame.Rect, text: pygame.surface.Surface
-    ):
+    ) -> Tuple[int, int]:
         width_margin = int((button.width - text.get_width()) / 2)
         height_margin = int((button.height - text.get_height()) / 2)
         return width_margin, height_margin
