@@ -5,7 +5,7 @@ import pygame
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.sounds import Sounds
-from contants import HEIGHT
+from constants import HEIGHT
 
 
 class LaneElement(pygame.sprite.Sprite):

@@ -4,7 +4,7 @@ import pygame
 
 from classes.button import Button
 from classes.coodinates import Coordinates
-from contants import *
+from constants import *
 
 
 class Menu:

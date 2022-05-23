@@ -3,7 +3,7 @@ from random import choice, uniform
 from typing import List, Tuple
 
 import pygame
-from contants import (
+from constants import (
     BLACK,
     GREEN,
     GREY,

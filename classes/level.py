@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Tuple
 
 import pygame
-from contants import BLACK, HEIGHT, WHITE, WIDTH
+from constants import BLACK, HEIGHT, WHITE, WIDTH
 
 
 class Level(Enum):
@@ -49,27 +49,25 @@ class LevelTransition:
         pygame.draw.rect(self._surface, BLACK, self._background)
 
     def __render_title(self):
-        width_margin, height_margin = self.__calculate_margin_for_title(
-            self._background, self._title
-        )
+        width_margin, height_margin = self.__calculate_margin_for_title()
 
         self._surface.blit(
             self._title,
             (self._background.x + width_margin, self._background.y + height_margin),
         )
 
-    def __calculate_margin_for_title(
-        self, rect: pygame.rect.Rect, title: pygame.surface.Surface
-    ) -> Tuple[int, int]:
-        width_margin = int((rect.width - title.get_width()) / 2)
-        height_margin = int((rect.height - title.get_height()) / 8)
+    def __calculate_margin_for_title(self) -> Tuple[int, int]:
+        width_margin = int((self._background.width - self._title.get_width()) / 2)
+        height_margin = int((self._background.height - self._title.get_height()) / 8)
         return width_margin, height_margin
 
     def _calculate_margin_for_instructions(
-        self, rect: pygame.rect.Rect, title: pygame.surface.Surface
+        self, line_text: pygame.surface.Surface
     ) -> Tuple[int, int]:
-        width_margin = int((rect.width - title.get_width()) / 2)
-        height_margin = int((rect.height - self._instructions_font.get_height()) / 2)
+        width_margin = int((self._background.width - line_text.get_width()) / 2)
+        height_margin = int(
+            (self._background.height - self._instructions_font.get_height()) / 2
+        )
         return width_margin, height_margin
 
 
@@ -97,7 +95,7 @@ class LevelOneTransition(LevelTransition):
 
     def _render_first_line(self):
         width_margin, height_margin = self._calculate_margin_for_instructions(
-            self._background, self._first_line
+            self._first_line
         )
 
         self._surface.blit(
@@ -110,7 +108,7 @@ class LevelOneTransition(LevelTransition):
 
     def _render_second_line(self):
         width_margin, height_margin = self._calculate_margin_for_instructions(
-            self._background, self._second_line
+            self._second_line
         )
 
         self._surface.blit(
@@ -145,7 +143,7 @@ class LevelTwoTransition(LevelTransition):
 
     def _render_third_line(self):
         width_margin, height_margin = self._calculate_margin_for_instructions(
-            self._background, self._third_line
+            self._third_line
         )
 
         self._surface.blit(
@@ -179,7 +177,7 @@ class LevelThreeTransition(LevelTransition):
 
     def _render_fourth_line(self):
         width_margin, height_margin = self._calculate_margin_for_instructions(
-            self._background, self._fourth_line
+            self._fourth_line
         )
 
         self._surface.blit(
