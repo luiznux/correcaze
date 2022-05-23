@@ -1,5 +1,5 @@
 from enum import Enum
-from random import choice, uniform
+from random import choice, randint, uniform
 from typing import List, Tuple
 
 import pygame
@@ -7,7 +7,7 @@ from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YE
 
 from classes.caze import Caze
 from classes.coodinates import Coordinates
-from classes.elements import Hamburguer, LaneElement, Weight
+from classes.elements import Hamburguer, LaneElement, Salad, Weight
 from classes.level import (
     Level,
     LevelBar,
@@ -78,18 +78,24 @@ class Lane:
         else:
             self.__line_height = self.__line_max_height
         self.__SPEED = 5
+        self.__MAX_SPEED = 10
 
     def render(self) -> None:
         pass
 
-    def play(self) -> None:
+    def play(self, level: Level) -> None:
+        if level == Level.Three:
+            speed = self.__MAX_SPEED
+        else:
+            speed = self.__SPEED
+
         if self.__is_line_over_screen():
             self.__line_y = self._y_position - self.__line_max_height
             self.__line_height = 0
         elif self.__is_line_height_at_max():
-            self.__line_y += self.__SPEED
+            self.__line_y += speed
         else:
-            self.__line_height += self.__SPEED
+            self.__line_height += speed
 
     def _render(self, lane_x: float) -> None:
         asphalt = pygame.Rect(lane_x, self._y_position, self._width, self._height)
@@ -144,9 +150,9 @@ class Avenue:
         for lane in self.__lanes:
             lane.render()
 
-    def play(self):
+    def play(self, level: Level):
         for lane in self.__lanes:
-            lane.play()
+            lane.play(level)
 
     def __initialize_lanes(self) -> Tuple[Lane, Lane, Lane]:
         return (
@@ -192,14 +198,14 @@ class Game:
         pass
 
     def play(self) -> None:
-        # self.__sounds.play_background_music(self.__level)
         if self.__is_transitioning_level:
             return
 
-        self.__avenue.play()
+        self.__sounds.play_background_music(self.__level)
+        self.__avenue.play(self.__level)
 
         for index, element in enumerate(self.__lane_elements):
-            element.go_down()
+            element.go_down(self.__level)
             if element.is_over_screen():
                 self.__lane_elements.pop(index)
 
@@ -213,13 +219,13 @@ class Game:
         # elemento ou nenhum
         if len(self.__lane_elements) <= 1:
             if len(self.__lane_elements) == 0:
-                self.__generate_weight_on_random_lane()
+                self.__generate_good_item_on_random_lane()
                 self.__generate_hamburguer_on_random_lane()
             else:
                 # Verifica qual tipo de elemento que está na lane e
                 # gera o elemento contrário.
                 if isinstance(self.__lane_elements[0], Hamburguer):
-                    self.__generate_weight_on_random_lane()
+                    self.__generate_good_item_on_random_lane()
                 else:
                     self.__generate_hamburguer_on_random_lane()
 
@@ -235,6 +241,8 @@ class Game:
             self.__level = Level.Three
             self.__transition = LevelThreeTransition(self.__surface)
             self.__is_transitioning_level = True
+
+        self.__caze.run()
 
     def is_over(self) -> bool:
         return self.__over
@@ -258,8 +266,22 @@ class Game:
     def __generate_hamburguer_on_random_lane(self):
         self.__generate_element_on_random_lane(Hamburguer)
 
+    def __generate_good_item_on_random_lane(self):
+        if self.__level == Level.One or self.__caze.stamina < 150:
+            self.__generate_salad_on_random_lane()
+            return
+
+        random = randint(0, 1)
+        if random:
+            self.__generate_weight_on_random_lane()
+        else:
+            self.__generate_salad_on_random_lane()
+
     def __generate_weight_on_random_lane(self):
         self.__generate_element_on_random_lane(Weight)
+
+    def __generate_salad_on_random_lane(self):
+        self.__generate_element_on_random_lane(Salad)
 
     def __generate_element_on_random_lane(self, class_type):
         lanes_to_exclude = [i.position.x for i in self.__lane_elements]

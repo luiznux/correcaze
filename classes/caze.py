@@ -27,10 +27,16 @@ class Caze(pygame.sprite.Sprite):
         self.__coordinates = coordinates
         self.__rendered_image = self.__surface.blit(self.__image, coordinates)
 
+    def run(self) -> None:
+        self.__stamina -= 0.1
+
     def rendered_caze(self) -> pygame.rect.Rect:
         return self.__rendered_image
 
-    def increase_points(self) -> None:
+    def increase_points_for_salad(self) -> None:
+        self.__points += 5
+
+    def increase_points_for_weight(self) -> None:
         self.__points += 10
 
     def decrease_points(self) -> None:
