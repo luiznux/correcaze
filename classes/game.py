@@ -18,7 +18,13 @@ from constants import (
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Weight
-from classes.level import Level, LevelBar, LevelOneTransition
+from classes.level import (
+    Level,
+    LevelBar,
+    LevelOneTransition,
+    LevelThreeTransition,
+    LevelTwoTransition,
+)
 from classes.sounds import Sounds
 
 
@@ -175,8 +181,6 @@ class Game:
         self.__avenue = Avenue(surface)
         self.__is_transitioning_level = True
         self.__transition = LevelOneTransition(self.__surface)
-        # self.__transition = LevelTwoTransition(self.__surface)
-        # self.__transition = LevelThreeTransition(self.__surface)
 
     def render(self):
         self.__avenue.render()
@@ -193,13 +197,15 @@ class Game:
 
         if self.__is_transitioning_level:
             self.__transition.render()
-            # self.__is_transitioning_level = False
+            return
 
     def update(self) -> None:
         pass
 
     def play(self) -> None:
         # self.__sounds.play_background_music(self.__level)
+        if self.__is_transitioning_level:
+            return
 
         self.__avenue.play()
 
@@ -234,9 +240,11 @@ class Game:
 
         if self.__level == Level.One and self.__caze.points >= 250:
             self.__level = Level.Two
+            self.__transition = LevelTwoTransition(self.__surface)
             self.__is_transitioning_level = True
         elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
+            self.__transition = LevelThreeTransition(self.__surface)
             self.__is_transitioning_level = True
 
     def is_over(self) -> bool:
@@ -248,6 +256,10 @@ class Game:
                 return GameState.Paused
             else:
                 self.__caze.on_event(event)
+
+            if self.__is_transitioning_level:
+                if event.key == pygame.K_RETURN:
+                    self.__is_transitioning_level = False
 
         return GameState.Playing
 

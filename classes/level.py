@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Tuple
 
 import pygame
-from constants import BLACK, HEIGHT, WHITE, WIDTH
+from constants import BLACK, HEIGHT, RED, WHITE, WIDTH
 
 
 class Level(Enum):
@@ -37,6 +37,7 @@ class LevelTransition:
     def _render(self) -> None:
         self.__render_background()
         self.__render_title()
+        self.__render_continue_text()
 
     def __create_background(self) -> pygame.rect.Rect:
         width = WIDTH / 3
@@ -47,6 +48,21 @@ class LevelTransition:
 
     def __render_background(self) -> None:
         pygame.draw.rect(self._surface, BLACK, self._background)
+
+    def __render_continue_text(self) -> None:
+        width_margin, _ = self.__calculate_margin_for_title()
+
+        text = self._instructions_font.render(
+            "Pressione enter pra continuar", True, RED
+        )
+
+        self._surface.blit(
+            text,
+            (
+                self._background.x + width_margin,
+                self._background.y + self._background.height - text.get_height(),
+            ),
+        )
 
     def __render_title(self):
         width_margin, height_margin = self.__calculate_margin_for_title()
