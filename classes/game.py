@@ -3,17 +3,7 @@ from random import choice, uniform
 from typing import List, Tuple
 
 import pygame
-from constants import (
-    BLACK,
-    GREEN,
-    GREY,
-    HEIGHT,
-    LANES_POSITION,
-    RED,
-    WHITE,
-    WIDTH,
-    YELLOW,
-)
+from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
 
 from classes.caze import Caze
 from classes.coodinates import Coordinates
@@ -34,7 +24,6 @@ class GameState(Enum):
     Paused = 3
     Credits = 4
     LoserMenu = 5
-    LevelTransition = 6
 
 
 class PointsBar:
