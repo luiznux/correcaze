@@ -1,4 +1,5 @@
 from typing import Tuple
+
 import pygame
 
 
@@ -26,10 +27,16 @@ class Caze(pygame.sprite.Sprite):
         self.__coordinates = coordinates
         self.__rendered_image = self.__surface.blit(self.__image, coordinates)
 
+    def run(self) -> None:
+        self.__stamina -= 0.1
+
     def rendered_caze(self) -> pygame.rect.Rect:
         return self.__rendered_image
 
-    def increase_points(self) -> None:
+    def increase_points_for_salad(self) -> None:
+        self.__points += 5
+
+    def increase_points_for_weight(self) -> None:
         self.__points += 10
 
     def decrease_points(self) -> None:
@@ -50,7 +57,14 @@ class Caze(pygame.sprite.Sprite):
     def is_out_of_stamina(self) -> bool:
         return self.__stamina <= 0
 
-    def change_lane(self, direction: str):
+    def on_event(self, event: pygame.event.Event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                self.__change_lane("left")
+            if event.key == pygame.K_RIGHT:
+                self.__change_lane("right")
+
+    def __change_lane(self, direction: str):
         if direction == "left":
             self.move_left()
         else:

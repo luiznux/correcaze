@@ -1,11 +1,10 @@
 import pygame
 
+from classes.credits import Credits
 from classes.game import Game, GameState
 from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu
-from classes.credits import Credits
 from classes.sounds import Sounds
-from contants import *
-
+from constants import *
 
 pygame.init()
 pygame.mixer.init()
