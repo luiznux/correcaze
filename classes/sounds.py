@@ -58,7 +58,7 @@ class Sounds:
             return
 
         if self.__is_music_paused:
-            return self.resume_background_music()
+            return self.__resume_background_music()
 
         # Verifica se alguma musica ja esta rondando em background
         if mixer.music.get_busy():
@@ -78,7 +78,7 @@ class Sounds:
             mixer.pause()
             self.__is_music_paused = True
 
-    def resume_background_music(self) -> None:
+    def __resume_background_music(self) -> None:
         if self.__is_music_paused:
             mixer.unpause()
         self.__is_music_paused = False
