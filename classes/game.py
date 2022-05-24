@@ -4,6 +4,8 @@ import pygame
 
 from enum import Enum
 
+from pygame.mixer import Sound
+
 from classes.level import Level, LevelBar
 from classes.caze import Caze
 from classes.coodinates import Coordinates
@@ -180,7 +182,7 @@ class Game:
         pass
 
     def play(self) -> None:
-        # self.__sounds.play_background_music(self.__level)
+        self.__sounds.play_background_music(self.__level)
 
         self.__avenue.play()
 
@@ -227,6 +229,7 @@ class Game:
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                self.__sounds.pause_background_music()
                 return GameState.Paused
             else:
                 self.__move_caze(event)

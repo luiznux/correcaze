@@ -1,5 +1,6 @@
 from typing import Dict
 from pygame import mixer
+from random import choice
 
 from classes.level import Level
 
@@ -12,15 +13,17 @@ class Sounds:
             Level.Three: False,
         }
         self.__is_playing_sound_effect = False
+        self.__is_music_paused = False
         self.__background_volume = 0.08
         self.__effects_volume = 0.10
         mixer.music.set_volume(self.__background_volume)
 
-    sound_effects_map = {
-        "dentroo": "assets/sound-effects/dentrooo.mp3",
-        "come-carne": "assets/sound-effects/ele-ta-dilacerando-a-carne.mp3",
-        "meu-deus": "assets/sound-effects/meu-deus-que-isso.mp3",
-    }
+    positive_sound_effects_map = ["assets/sound-effects/dentrooo.mp3"]
+
+    negative_sound_effects_map = [
+        "assets/sound-effects/ele-ta-dilacerando-a-carne.mp3",
+        "assets/sound-effects/meu-deus-que-isso.mp3",
+    ]
 
     background_music_map = {
         Level.One: "assets/background-music/hino-do-vasco.mp3",
@@ -28,11 +31,22 @@ class Sounds:
         Level.Three: "assets/background-music/hino-do-corinthians.mp3",
     }
 
-    def play_sound_effect(self, sound_effect_name: str):
-        sound = mixer.Sound(self.sound_effects_map.get(sound_effect_name))
+    def play_random_positive_sound_effect(self) -> None:
+        sound = mixer.Sound(choice(self.positive_sound_effects_map))
+        sound.set_volume(self.__effects_volume)
+
+        if self.__is_playing_sound_effect:
+            sound.fadeout(3000)
+            self.__is_playing_sound_effect = False
+        else:
+            sound.play()
+            self.__is_playing_sound_effect = True
+
+    def play_random_negative_sound_effect(self) -> None:
+        sound = mixer.Sound(choice(self.negative_sound_effects_map))
         sound.set_volume(self.__effects_volume)
         if self.__is_playing_sound_effect:
-            sound.fadeout(1000)
+            sound.fadeout(3000)
             self.__is_playing_sound_effect = False
         else:
             sound.play()
@@ -41,6 +55,9 @@ class Sounds:
     def play_background_music(self, level: Level) -> None:
         if self.__is_playing_background_music_for_level(level):
             return
+
+        if self.__is_music_paused:
+            return self.resume_background_music()
 
         # Verifica se alguma musica ja esta rondando em background
         if mixer.music.get_busy():
@@ -54,6 +71,16 @@ class Sounds:
         if mixer.music.get_busy():
             mixer.music.unload()
         self.__playing_background_music_control[level] = False
+
+    def pause_background_music(self) -> None:
+        if not self.__is_music_paused:
+            mixer.pause()
+            self.__is_music_paused = True
+
+    def resume_background_music(self) -> None:
+        if self.__is_music_paused:
+            mixer.unpause()
+        self.__is_music_paused = False
 
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
         return self.__playing_background_music_control[level]
