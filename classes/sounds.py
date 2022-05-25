@@ -55,10 +55,10 @@ class Sounds:
 
     def play_background_music(self, level: Level) -> None:
         if self.__is_playing_background_music_for_level(level):
-            return
-
-        if self.__is_music_paused:
-            return self.__resume_background_music()
+            if self.__is_music_paused:
+                return self.resume_background_music()
+            else:
+                return
 
         # Verifica se alguma musica ja esta rondando em background
         if mixer.music.get_busy():
@@ -74,13 +74,14 @@ class Sounds:
         self.__playing_background_music_control[level] = False
 
     def pause_background_music(self) -> None:
+        print("pause", self.__is_music_paused)
         if not self.__is_music_paused:
-            mixer.pause()
+            mixer.music.pause()
             self.__is_music_paused = True
 
-    def __resume_background_music(self) -> None:
-        if self.__is_music_paused:
-            mixer.unpause()
+    def resume_background_music(self) -> None:
+        print("resume", self.__is_music_paused)
+        mixer.music.unpause()
         self.__is_music_paused = False
 
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
