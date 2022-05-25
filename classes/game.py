@@ -5,8 +5,6 @@ from typing import List, Tuple
 import pygame
 from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
 
-
-from classes.level import Level, LevelBar
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Salad, Weight
@@ -200,7 +198,6 @@ class Game:
         pass
 
     def play(self) -> None:
-        self.__sounds.play_background_music(self.__level)
         if self.__is_transitioning_level:
             return
 
@@ -240,10 +237,12 @@ class Game:
             self.__level = Level.Two
             self.__transition = LevelTwoTransition(self.__surface)
             self.__is_transitioning_level = True
+            self.__sounds.stop_background_music(self.__level)
         elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
             self.__transition = LevelThreeTransition(self.__surface)
             self.__is_transitioning_level = True
+            self.__sounds.stop_background_music(self.__level)
 
         self.__caze.run()
 
