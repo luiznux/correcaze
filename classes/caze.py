@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import List, Tuple
 
 import pygame
 
@@ -8,14 +8,19 @@ class Caze(pygame.sprite.Sprite):
 
     def __init__(self, surface: pygame.surface.Surface):
         pygame.sprite.Sprite.__init__(self)
-        image = pygame.image.load("assets/images/caze_placeholder.png").convert_alpha()
-        self.__image = pygame.transform.scale(image, (200, 200))
         self.__surface = surface
         self.__stamina = 100
         self._speed = 10
         self._lane = 1
         self.__points = 0
         self.__coordinates: Tuple[int, int] = (0, 0)
+        self.__image_index = 0
+        self.__images: List[pygame.surface.Surface] = []
+        for i in range(1, 13):
+            self.__images.append(
+                pygame.image.load(f"assets/images/caze{i}.png").convert_alpha(),
+            )
+        self.__image = self.__images[self.__image_index]
         self.__rendered_image: pygame.rect.Rect = pygame.rect.Rect(
             self.__coordinates[0],
             self.__coordinates[1],
@@ -26,6 +31,10 @@ class Caze(pygame.sprite.Sprite):
     def render(self, coordinates: Tuple[int, int]):
         self.__coordinates = coordinates
         self.__rendered_image = self.__surface.blit(self.__image, coordinates)
+        self.__image_index += 1
+        if self.__image_index == len(self.__images):
+            self.__image_index = 0
+        self.__image = self.__images[self.__image_index]
 
     def run(self) -> None:
         self.__stamina -= 0.05
