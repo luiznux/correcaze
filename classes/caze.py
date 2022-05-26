@@ -28,7 +28,7 @@ class Caze(pygame.sprite.Sprite):
         self.__rendered_image = self.__surface.blit(self.__image, coordinates)
 
     def run(self) -> None:
-        self.__stamina -= 0.1
+        self.__stamina -= 0.05
 
     def rendered_caze(self) -> pygame.rect.Rect:
         return self.__rendered_image

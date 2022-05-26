@@ -237,10 +237,12 @@ class Game:
             self.__level = Level.Two
             self.__transition = LevelTwoTransition(self.__surface)
             self.__is_transitioning_level = True
+            self.__sounds.stop_background_music(self.__level)
         elif self.__level == Level.Two and self.__caze.points >= 500:
             self.__level = Level.Three
             self.__transition = LevelThreeTransition(self.__surface)
             self.__is_transitioning_level = True
+            self.__sounds.stop_background_music(self.__level)
 
         self.__caze.run()
 
@@ -250,6 +252,7 @@ class Game:
     def on_event(self, event: pygame.event.Event) -> GameState:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                self.__sounds.pause_background_music()
                 return GameState.Paused
             else:
                 self.__caze.on_event(event)

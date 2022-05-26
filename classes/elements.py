@@ -66,7 +66,8 @@ class Hamburguer(LaneElement):
     def on_collision(self, caze: Caze, sounds: Sounds) -> None:
         caze.decrease_stamina()
         caze.decrease_points()
-        sounds.play_sound_effect("come-carne")
+        sounds.play_eat_sound_effect()
+        sounds.play_random_negative_sound_effect()
 
 
 class Weight(LaneElement):
@@ -78,7 +79,8 @@ class Weight(LaneElement):
     def on_collision(self, caze: Caze, sounds: Sounds) -> None:
         caze.decrease_stamina()
         caze.increase_points_for_weight()
-        sounds.play_sound_effect("meu-deus")
+        sounds.play_eat_sound_effect()
+        sounds.play_random_positive_sound_effect()
 
 
 class Salad(LaneElement):
@@ -90,4 +92,5 @@ class Salad(LaneElement):
     def on_collision(self, caze: Caze, sounds: Sounds) -> None:
         caze.increase_stamina()
         caze.increase_points_for_salad()
-        sounds.play_sound_effect("meu-deus")
+        sounds.play_eat_sound_effect()
+        sounds.play_random_positive_sound_effect()
