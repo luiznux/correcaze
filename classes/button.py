@@ -1,4 +1,5 @@
 from typing import Tuple
+
 import pygame
 
 from classes.coodinates import Coordinates
@@ -11,11 +12,14 @@ class Button:
         text: str,
         coordinates: Coordinates,
         width: int,
+        color=(255, 0, 0),
+        font_color=(0, 0, 0),
     ):
         self.__surface = surface
         self.__font = pygame.font.SysFont("Monaco", 40)
         self.__text = text
-        self.__color = (255, 0, 0)
+        self.__color = color
+        self.__font_color = font_color
         self.__button = pygame.Rect((coordinates.x, coordinates.y, width, 100))
 
     def was_clicked(self, event: pygame.event.Event) -> bool:
@@ -28,9 +32,9 @@ class Button:
     def render_button_with_centralized_text(self, text: str = ""):
         pygame.draw.rect(self.__surface, self.__color, self.__button)
         if text:
-            text_surface = self.__font.render(text, True, (0, 0, 0))
+            text_surface = self.__font.render(text, True, self.__font_color)
         else:
-            text_surface = self.__font.render(self.__text, True, (0, 0, 0))
+            text_surface = self.__font.render(self.__text, True, self.__font_color)
 
         width_margin, height_margin = self.__calculate_button_margins(
             self.__button, text_surface

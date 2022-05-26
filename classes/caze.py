@@ -48,7 +48,13 @@ class Caze(pygame.sprite.Sprite):
         self.__points += 10
 
     def decrease_points(self) -> None:
-        self.__points -= 10
+        if self.__points <= 0:
+            self.__points = 0
+        else:
+            if self.__points - 10 < 0:
+                self.__points = 0
+            else:
+                self.__points -= 10
 
     def increase_stamina(self) -> None:
         if self.__stamina < self.MAX_STAMINA:
