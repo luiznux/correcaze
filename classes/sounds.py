@@ -1,8 +1,7 @@
+from random import choice
 from typing import Dict
 
 from pygame import mixer, time
-from random import choice
-
 
 from classes.level import Level
 
@@ -15,9 +14,8 @@ class Sounds:
             Level.Three: False,
         }
         self.__last = time.get_ticks()
-        self.__is_waiting_sound_effect = False
         self.__is_music_paused = False
-        self.__cooldown = 6000
+        self.__cooldown = 5000
         self.__background_volume = 0.08
         self.__effects_volume = 0.10
         mixer.music.set_volume(self.__background_volume)
@@ -41,26 +39,18 @@ class Sounds:
         sound.play()
 
     def play_random_positive_sound_effect(self) -> None:
-        if self.__is_waiting_sound_effect:
-            return
-        else:
-            self.__is_waiting_sound_effect = True
+        if self.__should_play_sound_effect():
             sound = mixer.Sound(choice(self.positive_sound_effects_map))
             sound.set_volume(self.__effects_volume)
-            if self.__should_play_sound_effect:
-                sound.play()
-                self.__is_waiting_sound_effect = False
+            sound.play()
+            self.__last = time.get_ticks()
 
     def play_random_negative_sound_effect(self) -> None:
-        if self.__is_waiting_sound_effect:
-            return
-        else:
-            self.__is_waiting_sound_effect = True
+        if self.__should_play_sound_effect():
             sound = mixer.Sound(choice(self.negative_sound_effects_map))
             sound.set_volume(self.__effects_volume)
-            if self.__should_play_sound_effect:
-                sound.play()
-                self.__is_waiting_sound_effect = False
+            sound.play()
+            self.__last = time.get_ticks()
 
     def play_background_music(self, level: Level) -> None:
         if self.__is_playing_background_music_for_level(level):
