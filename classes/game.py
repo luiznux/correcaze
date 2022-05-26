@@ -77,8 +77,8 @@ class Lane:
             self.__line_height = self.__line_y
         else:
             self.__line_height = self.__line_max_height
-        self.__SPEED = 5
-        self.__MAX_SPEED = 10
+        self.__SPEED = 15
+        self.__MAX_SPEED = 30
 
     def render(self) -> None:
         pass
@@ -194,9 +194,6 @@ class Game:
             self.__transition.render()
             return
 
-    def update(self) -> None:
-        pass
-
     def play(self) -> None:
         if self.__is_transitioning_level:
             return
@@ -233,12 +230,12 @@ class Game:
             self.__sounds.stop_background_music(self.__level)
             self.__end_game()
 
-        if self.__level == Level.One and self.__caze.points >= 250:
+        if self.__level == Level.One and self.__caze.points >= 150:
             self.__level = Level.Two
             self.__transition = LevelTwoTransition(self.__surface)
             self.__is_transitioning_level = True
             self.__sounds.stop_background_music(self.__level)
-        elif self.__level == Level.Two and self.__caze.points >= 500:
+        elif self.__level == Level.Two and self.__caze.points >= 350:
             self.__level = Level.Three
             self.__transition = LevelThreeTransition(self.__surface)
             self.__is_transitioning_level = True
@@ -270,7 +267,7 @@ class Game:
         self.__generate_element_on_random_lane(Hamburguer)
 
     def __generate_good_item_on_random_lane(self):
-        if self.__level == Level.One or self.__caze.stamina < 150:
+        if self.__level == Level.One or self.__caze.is_stamina_low():
             self.__generate_salad_on_random_lane()
             return
 
