@@ -1,7 +1,8 @@
 from typing import Dict
 
-from pygame import mixer
+from pygame import mixer, time
 from random import choice
+
 
 from classes.level import Level
 
@@ -13,8 +14,10 @@ class Sounds:
             Level.Two: False,
             Level.Three: False,
         }
-        self.__is_playing_sound_effect = False
+        self.__last = time.get_ticks()
+        self.__is_waiting_sound_effect = False
         self.__is_music_paused = False
+        self.__cooldown = 6000
         self.__background_volume = 0.08
         self.__effects_volume = 0.10
         mixer.music.set_volume(self.__background_volume)
@@ -32,26 +35,32 @@ class Sounds:
         Level.Three: "assets/background-music/hino-do-corinthians.mp3",
     }
 
-    def play_random_positive_sound_effect(self) -> None:
-        sound = mixer.Sound(choice(self.positive_sound_effects_map))
-        sound.set_volume(self.__effects_volume)
+    def play_eat_sound_effect(self) -> None:
+        sound = mixer.Sound("assets/sound-effects/eat-sound.mp3")
+        sound.set_volume(0.07)
+        sound.play()
 
-        if self.__is_playing_sound_effect:
-            sound.fadeout(3000)
-            self.__is_playing_sound_effect = False
+    def play_random_positive_sound_effect(self) -> None:
+        if self.__is_waiting_sound_effect:
+            return
         else:
-            sound.play()
-            self.__is_playing_sound_effect = True
+            self.__is_waiting_sound_effect = True
+            sound = mixer.Sound(choice(self.positive_sound_effects_map))
+            sound.set_volume(self.__effects_volume)
+            if self.__should_play_sound_effect:
+                sound.play()
+                self.__is_waiting_sound_effect = False
 
     def play_random_negative_sound_effect(self) -> None:
-        sound = mixer.Sound(choice(self.negative_sound_effects_map))
-        sound.set_volume(self.__effects_volume)
-        if self.__is_playing_sound_effect:
-            sound.fadeout(3000)
-            self.__is_playing_sound_effect = False
+        if self.__is_waiting_sound_effect:
+            return
         else:
-            sound.play()
-            self.__is_playing_sound_effect = True
+            self.__is_waiting_sound_effect = True
+            sound = mixer.Sound(choice(self.negative_sound_effects_map))
+            sound.set_volume(self.__effects_volume)
+            if self.__should_play_sound_effect:
+                sound.play()
+                self.__is_waiting_sound_effect = False
 
     def play_background_music(self, level: Level) -> None:
         if self.__is_playing_background_music_for_level(level):
@@ -83,6 +92,10 @@ class Sounds:
         print("resume", self.__is_music_paused)
         mixer.music.unpause()
         self.__is_music_paused = False
+
+    def __should_play_sound_effect(self) -> bool:
+        now = time.get_ticks()
+        return now - self.__last >= self.__cooldown
 
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
         return self.__playing_background_music_control[level]
