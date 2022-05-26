@@ -10,9 +10,8 @@ class Caze(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.__surface = surface
         self.__stamina = 100
-        self._speed = 10
-        self._lane = 1
-        self.__points = 0
+        self.__lane: int = 1
+        self.__points: int = 0
         self.__coordinates: Tuple[int, int] = (0, 0)
         self.__image_index = 0
         self.__images: List[pygame.surface.Surface] = []
@@ -28,7 +27,7 @@ class Caze(pygame.sprite.Sprite):
             self.__image.get_height(),
         )
 
-    def render(self, coordinates: Tuple[int, int]):
+    def render(self, coordinates: Tuple[int, int]) -> None:
         self.__coordinates = coordinates
         self.__rendered_image = self.__surface.blit(self.__image, coordinates)
         self.__image_index += 1
@@ -73,47 +72,38 @@ class Caze(pygame.sprite.Sprite):
             if event.key == pygame.K_RIGHT:
                 self.__change_lane("right")
 
-    def __change_lane(self, direction: str):
-        if direction == "left":
-            self.move_left()
-        else:
-            self.move_right()
+    def get_height(self) -> int:
+        return self.__image.get_height()
 
-    def move_left(self):
-        if self._lane - 1 < 0:
-            pass
-        else:
-            self._lane -= 1
-
-    def move_right(self):
-        if self._lane + 1 > 2:
-            pass
-        else:
-            self._lane += 1
+    def is_stamina_low(self) -> bool:
+        return self.__stamina < 150
 
     @property
     def points(self):
         return self.__points
 
     @property
-    def image(self):
-        return self.__image
-
-    @image.setter
-    def image(self, value):
-        self.__image = value
-
-    @property
     def lane(self):
-        return self._lane
+        return self.__lane
 
     @property
     def stamina(self):
         return self.__stamina
 
-    @property
-    def coordinates(self) -> Tuple[int, int]:
-        return self.__coordinates
+    def __change_lane(self, direction: str):
+        if direction == "left":
+            self.__move_left()
+        else:
+            self.__move_right()
 
-    def get_height(self) -> int:
-        return self.__image.get_height()
+    def __move_left(self):
+        if self.__lane - 1 < 0:
+            pass
+        else:
+            self.__lane -= 1
+
+    def __move_right(self):
+        if self.__lane + 1 > 2:
+            pass
+        else:
+            self.__lane += 1

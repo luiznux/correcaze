@@ -267,7 +267,7 @@ class Game:
         self.__generate_element_on_random_lane(Hamburguer)
 
     def __generate_good_item_on_random_lane(self):
-        if self.__level == Level.One or self.__caze.stamina < 150:
+        if self.__level == Level.One or self.__caze.is_stamina_low():
             self.__generate_salad_on_random_lane()
             return
 
