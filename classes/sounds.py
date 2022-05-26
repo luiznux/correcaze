@@ -13,7 +13,7 @@ class Sounds:
             Level.Two: False,
             Level.Three: False,
         }
-        self.__last = time.get_ticks()
+        self.__last_time_sfx_played = time.get_ticks()
         self.__is_music_paused = False
         self.__cooldown = 5000
         self.__background_volume = 0.08
@@ -43,14 +43,14 @@ class Sounds:
             sound = mixer.Sound(choice(self.positive_sound_effects_map))
             sound.set_volume(self.__effects_volume)
             sound.play()
-            self.__last = time.get_ticks()
+            self.__last_time_sfx_played = time.get_ticks()
 
     def play_random_negative_sound_effect(self) -> None:
         if self.__should_play_sound_effect():
             sound = mixer.Sound(choice(self.negative_sound_effects_map))
             sound.set_volume(self.__effects_volume)
             sound.play()
-            self.__last = time.get_ticks()
+            self.__last_time_sfx_played = time.get_ticks()
 
     def play_background_music(self, level: Level) -> None:
         if self.__is_playing_background_music_for_level(level):
@@ -81,7 +81,7 @@ class Sounds:
 
     def __should_play_sound_effect(self) -> bool:
         now = time.get_ticks()
-        return now - self.__last >= self.__cooldown
+        return now - self.__last_time_sfx_played >= self.__cooldown
 
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
         return self.__playing_background_music_control[level]
