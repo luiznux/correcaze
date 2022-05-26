@@ -2,7 +2,7 @@ import pygame
 
 from classes.credits import Credits
 from classes.game import Game, GameState
-from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu
+from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu, RankMenu
 from classes.sounds import Sounds
 from constants import *
 
@@ -17,6 +17,7 @@ background = pygame.Surface((WIDTH, HEIGHT))
 initial_menu = InitialMenu(background)
 pause_menu = PauseMenu(background)
 loser_menu = LoserMenu(background)
+rank_menu = RankMenu(background)
 credits = Credits(background)
 game = Game(background)
 current_menu: Menu = initial_menu
@@ -30,6 +31,7 @@ if __name__ == "__main__":
         background.fill((255, 255, 255))
 
         if game.is_over():
+            # TODO: Tela para adicionar o usuário no ranking
             game = Game(background)
             state = GameState.LoserMenu
             current_menu = loser_menu
@@ -41,6 +43,8 @@ if __name__ == "__main__":
             game.render()
         elif state == GameState.Credits:
             credits.render()
+        elif state == GameState.Ranking:
+            rank_menu.render()
 
         for event in pygame.event.get():
             if event.type == pygame.WINDOWCLOSE:
@@ -52,9 +56,15 @@ if __name__ == "__main__":
                     state = GameState.Playing
                 elif current_menu.clicked_on_credits(event):
                     state = GameState.Credits
+                elif current_menu.clicked_on_ranking(event):
+                    state = GameState.Ranking
                 elif current_menu.clicked_on_quit(event):
                     pygame.quit()
                     exit()
+
+            if state == GameState.Ranking:
+                if rank_menu.clicked_on_menu(event):
+                    state = GameState.Menu
 
             if state == GameState.Credits and credits.clicked_on_menu(event):
                 state = GameState.Menu

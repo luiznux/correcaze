@@ -24,6 +24,15 @@ class GameState(Enum):
     Paused = 3
     Credits = 4
     LoserMenu = 5
+    Ranking = 6
+
+    def is_menu(self) -> bool:
+        return (
+            self == GameState.Menu
+            or self == GameState.Paused
+            or self == GameState.LoserMenu
+            or self == GameState.Ranking
+        )
 
 
 class PointsBar:
