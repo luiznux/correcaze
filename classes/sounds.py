@@ -15,7 +15,7 @@ class Sounds:
         }
         self.__last_time_sfx_played = time.get_ticks()
         self.__is_music_paused = False
-        self.__cooldown = 5000
+        self.__sfx_cooldown = 5000
         self.__background_volume = 0.08
         self.__effects_volume = 0.10
         mixer.music.set_volume(self.__background_volume)
@@ -81,7 +81,7 @@ class Sounds:
 
     def __should_play_sound_effect(self) -> bool:
         now = time.get_ticks()
-        return now - self.__last_time_sfx_played >= self.__cooldown
+        return now - self.__last_time_sfx_played >= self.__sfx_cooldown
 
     def __is_playing_background_music_for_level(self, level: Level) -> bool:
         return self.__playing_background_music_control[level]
