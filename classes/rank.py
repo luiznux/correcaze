@@ -15,22 +15,24 @@ class Ranking:
 
     def __init__(self):
         Path("data").mkdir(exist_ok=True)
-        with open(self.__RANKING_FILE, "w") as fp:
-            json.dump({}, fp)
+        ranking_file = Path(self.__RANKING_FILE)
+        if not ranking_file.exists():
+            with open(self.__RANKING_FILE, "w") as fp:
+                json.dump({"rankings": []}, fp)
 
     def write_to_scoreboard(self, player_name: str, points: int) -> None:
         with open(self.__RANKING_FILE) as ranking_file:
             rankings = json.load(ranking_file)
-        rankings.update({"name": player_name, "points": points})
+        rankings["rankings"].append({"name": player_name, "points": points})
 
         with open(self.__RANKING_FILE, "w") as ranking_file:
-            json.dump(ranking_file, rankings)
+            json.dump(rankings, ranking_file)
 
     def read_scoreboard(self) -> List[PlayerRank]:
         ranks: List[PlayerRank] = []
         with open(self.__RANKING_FILE) as ranking_file:
             rankings = json.load(ranking_file)
-            for ranking in rankings:
+            for ranking in rankings["rankings"]:
                 ranks.append(PlayerRank(ranking["name"], int(ranking["points"])))
 
         return ranks

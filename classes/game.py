@@ -15,6 +15,7 @@ from classes.level import (
     LevelThreeTransition,
     LevelTwoTransition,
 )
+from classes.rank import Ranking
 from classes.sounds import Sounds
 
 
@@ -185,6 +186,7 @@ class Game:
         self.__avenue = Avenue(surface)
         self.__is_transitioning_level = True
         self.__transition = LevelOneTransition(self.__surface)
+        self.__ranking = Ranking()
 
     def render(self):
         self.__avenue.render()
@@ -268,6 +270,9 @@ class Game:
                     self.__is_transitioning_level = False
 
         return GameState.Playing
+
+    def save_ranking(self, player_name: str) -> None:
+        self.__ranking.write_to_scoreboard(player_name, self.__caze.points)
 
     def __end_game(self) -> None:
         self.__over = True
