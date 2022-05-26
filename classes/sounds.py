@@ -56,6 +56,8 @@ class Sounds:
         if self.__is_playing_background_music_for_level(level):
             if self.__is_music_paused:
                 return self.resume_background_music()
+            else:
+                return
 
         # Verifica se alguma musica ja esta rondando em background
         if mixer.music.get_busy():
