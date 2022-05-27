@@ -4,7 +4,6 @@ from typing import List, Tuple
 
 import pygame
 from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
-
 from classes.caze import Caze
 from classes.coodinates import Coordinates
 from classes.elements import Hamburguer, LaneElement, Salad, Weight
@@ -205,11 +204,11 @@ class Game:
             self.__transition.render()
             return
 
-    def play(self) -> None:
+    def play(self, sound_mute: bool) -> None:
         if self.__is_transitioning_level:
             return
-
-        self.__sounds.play_background_music(self.__level)
+        if not sound_mute:
+            self.__sounds.play_background_music(self.__level)
         self.__avenue.play(self.__level)
 
         for index, element in enumerate(self.__lane_elements):

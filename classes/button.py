@@ -12,6 +12,7 @@ class Button:
         text: str,
         coordinates: Coordinates,
         width: int,
+        height = 100,
         color=(255, 0, 0),
         font_color=(0, 0, 0),
     ):
@@ -20,7 +21,7 @@ class Button:
         self.__text = text
         self.__color = color
         self.__font_color = font_color
-        self.__button = pygame.Rect((coordinates.x, coordinates.y, width, 100))
+        self.__button = pygame.Rect((coordinates.x, coordinates.y, width, height))
 
     def was_clicked(self, event: pygame.event.Event) -> bool:
         if event.type != pygame.MOUSEBUTTONUP:

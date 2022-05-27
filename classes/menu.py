@@ -37,12 +37,18 @@ class Menu:
             return False
         return self.__quit_button.was_clicked(event)
 
+    def clicked_on_mute(self, event: pygame.event.Event) -> bool:
+        if self.__sound_button is None:
+            return False
+        return self.__sound_button.was_clicked(event)
+
     def render(self, start_game_text: str):
         title_surface = self._render_main_title()
         self.__render_start_game_button(title_surface, start_game_text)
         self.__render_credits_button(title_surface)
         self.__render_ranking_button(title_surface)
         self._render_quit_button(title_surface)
+        self._render_sound_buttun(title_surface)
 
     def _render_main_title(self) -> pygame.rect.Rect:
         title_font = pygame.font.SysFont("Monaco", 60)
@@ -86,6 +92,16 @@ class Menu:
             title_surface.width,
         )
         self.__quit_button.render_button_with_centralized_text()
+
+    def _render_sound_buttun(self, title_surface: pygame.rect.Rect):
+        self.__sound_button = Button(
+            self.__surface,
+            "Mute",
+            Coordinates(WIDTH-200, HEIGHT-200),
+            width=200,
+            height=200
+        )
+        self.__sound_button.render_button_with_centralized_text()
 
 
 class PauseMenu(Menu):

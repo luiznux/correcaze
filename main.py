@@ -13,7 +13,7 @@ pygame.font.init()
 clock = pygame.time.Clock()
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 background = pygame.Surface((WIDTH, HEIGHT))
-
+sound_mute = False
 initial_menu = InitialMenu(background)
 pause_menu = PauseMenu(background)
 loser_menu = LoserMenu(background)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         if state in [GameState.Menu, GameState.Paused]:
             current_menu.render()
         elif state == GameState.Playing:
-            game.play()
+            game.play(sound_mute)
             game.render()
         elif state == GameState.Credits:
             credits.render()
@@ -60,6 +60,10 @@ if __name__ == "__main__":
                 elif current_menu.clicked_on_quit(event):
                     pygame.quit()
                     exit()
+                elif current_menu.clicked_on_mute(event):
+                    sound_mute = not sound_mute
+
+
 
             if state == GameState.Ranking:
                 if rank_menu.clicked_on_menu(event):
