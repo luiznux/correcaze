@@ -3,10 +3,10 @@ from typing import Optional, Tuple
 import pygame
 from constants import HEIGHT
 
-from classes.caze import Caze
-from classes.coodinates import Coordinates
-from classes.level import Level
-from classes.sounds import Sounds
+from caze import Caze
+from coodinates import Coordinates
+from level import Level
+from sounds import Sounds
 
 
 class LaneElement(pygame.sprite.Sprite):

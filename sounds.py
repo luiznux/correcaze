@@ -3,7 +3,7 @@ from typing import Dict
 
 from pygame import mixer, time
 
-from classes.level import Level
+from level import Level
 
 
 class Sounds:

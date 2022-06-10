@@ -2,8 +2,8 @@ from typing import Optional
 
 import pygame
 
-from classes.button import Button
-from classes.coodinates import Coordinates
+from button import Button
+from coodinates import Coordinates
 from constants import *
 
 

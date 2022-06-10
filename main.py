@@ -1,9 +1,9 @@
 import pygame
 
-from classes.credits import Credits
-from classes.game import Game, GameState
-from classes.menu import InitialMenu, LoserMenu, Menu, PauseMenu, RankMenu
-from classes.sounds import Sounds
+from credits import Credits
+from game import Game, GameState
+from menu import InitialMenu, LoserMenu, Menu, PauseMenu, RankMenu
+from sounds import Sounds
 from constants import *
 
 pygame.init()

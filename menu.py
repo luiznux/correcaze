@@ -3,9 +3,9 @@ from typing import Optional
 import pygame
 from constants import *
 
-from classes.button import Button
-from classes.coodinates import Coordinates
-from classes.rank import Ranking
+from button import Button
+from coodinates import Coordinates
+from rank import Ranking
 
 
 class Menu:

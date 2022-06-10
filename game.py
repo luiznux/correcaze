@@ -4,18 +4,18 @@ from typing import List, Tuple
 
 import pygame
 from constants import BLACK, GREEN, GREY, HEIGHT, LANES_POSITION, RED, WIDTH, YELLOW
-from classes.caze import Caze
-from classes.coodinates import Coordinates
-from classes.elements import Hamburguer, LaneElement, Salad, Weight
-from classes.level import (
+from caze import Caze
+from coodinates import Coordinates
+from elements import Hamburguer, LaneElement, Salad, Weight
+from level import (
     Level,
     LevelBar,
     LevelOneTransition,
     LevelThreeTransition,
     LevelTwoTransition,
 )
-from classes.rank import Ranking
-from classes.sounds import Sounds
+from rank import Ranking
+from sounds import Sounds
 
 
 class GameState(Enum):
